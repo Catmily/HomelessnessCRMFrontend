@@ -1,0 +1,220 @@
+@use 'greatReset';
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&display=swap');
+
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
+$custom-colors: (
+  "primary": #198754,
+);
+
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/buttons";
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+	background-color: #23a86a;
+}
+
+.nav-link.active {
+	color: #ffffff !important;
+}
+
+#selector {
+	background-color: #aaaa;
+}
+
+h1, h2 {
+	font-family: 'Rowdies', cursive;
+}
+
+a.nav-link {
+	font-family: 'Rowdies', cursive;
+	font-weight: 300;
+}
+
+
+
+h1 {
+	font-weight: 300;
+	font-size: 2.5em;
+  }
+  
+  h2 {
+	font-size: 1.5em;
+	font-weight: 300;
+  }
+  
+  h3 {
+	font-size: 1.17em;
+	font-weight: 500;
+  }
+  
+  h4 {
+	font-size: 1.00em;
+	font-weight: 500;
+  }
+  
+  h5 {
+	font-size: 0.83em;
+  }
+  
+  h6 {
+	font-size: 0.67em;
+  }
+  
+
+
+* {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.navbarContainer {
+	height: 64px;
+}
+
+#nav2 {
+	height: 32px;
+}
+
+.align-left {
+	text-align: left;
+}
+
+.align-center {
+	text-align: center;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.bold {
+	font-weight: 700;
+}
+
+.almost-white {
+    color: #f3efefdd;
+}
+
+.main-content {
+	background-color: rgb(240, 240, 240);
+}
+
+.supplementary-content {
+	background-color: rgb(250, 250, 250);
+}
+
+.fade-in {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: fade-in;
+	animation-duration: 0.3s;
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+.login-content {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+}
+
+.login-dialog {
+	background-color: rgb(248, 248, 248);
+	padding: 20px;
+}
+
+
+body {
+	background-image: url("../assets/denim.png");
+	background-color: #e6e6e6dd;
+}
+
+.card-img {
+	max-width: 50%;
+}
+
+.card-img-top {
+	padding: 40px;
+}
+
+.card-home {
+	min-height: 280px;
+	min-width: 280px;
+	padding: 20px;
+}
+
+
+
+.card-dark {
+	background-color: hsl(137, 50%, 98%);
+}
+
+.footer {
+	background-color: #ebebebdd;
+	color: #464646;
+}
+
+.footer a {
+	font-size: 0.8em
+}
+
+.card-light {
+	background-color: hsl(110, 13%, 94%);
+}
+
+a {
+	color: #272c28 !important;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #2b352d;
+}
+
+
+a:active {
+	color: #5f7964 !important;
+}
+
+a:visited {
+	color: #25412b;
+}
+
+a.btn {
+	color: #e6e6e6;
+	text-decoration: none;
+}
+
+a.btn:hover {
+	color: #f3f3f3;
+}
+
+
+a.btn:active {
+	color: #cae7d0;
+}
+
+a.btn:visited {
+	color: #e6e6e6;
+}
+
+.red {
+	color: #dd0000;
+}
