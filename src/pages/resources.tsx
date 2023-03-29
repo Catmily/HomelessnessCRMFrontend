@@ -11,7 +11,7 @@ export function Profile() {
         
             <StandardLayout content={
 
-            <><BasicInformationDetails />
+            <>
                 <Container className="p-0 mt-4 mb-4">
                     <Row>
 

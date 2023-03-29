@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
-import { currentNavBarTime, currentNavBarDate } from "../utils/NavBarTime";
+import { getTokenUser } from "../glue/Auth";
+import { currentNavBarTime, currentNavBarDate } from "../glue/NavBarTime";
 import Icon from './logo';
 
 export default function NavBar() : JSX.Element {
@@ -19,14 +20,13 @@ export default function NavBar() : JSX.Element {
         <Nav>
 
         <NavDropdown title="User" id="collasible-nav-dropdown" className="my-auto">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              Another action
+            <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+            <NavDropdown.Item href="/profile/change-password">
+              Change Password
             </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">
-              Separated link
+            <NavDropdown.Item href="/logout">
+              Logout
             </NavDropdown.Item>
           </NavDropdown>
 
@@ -45,11 +45,11 @@ export function SubNavBar() {
 
 
       <Nav className="me-auto">
-      <Nav.Link>Cases</Nav.Link>
-      <Nav.Link>Search</Nav.Link>
-      <Nav.Link>Metrics</Nav.Link>
-      <Nav.Link>Safeguarding</Nav.Link>
-      <Nav.Link>Resources</Nav.Link>
+      <Nav.Link href="/cases">Cases</Nav.Link>
+      <Nav.Link href="/search">Search</Nav.Link>
+      <Nav.Link href="/metrics">Metrics</Nav.Link>
+      <Nav.Link href="/safeguarding">Safeguarding</Nav.Link>
+      <Nav.Link href="/resources">Resources</Nav.Link>
 
 
       </Nav>
@@ -66,12 +66,12 @@ export function SecondNavBarTime() : JSX.Element  {
 
   useEffect(() => {
     const repeat = setInterval(() => setTime(currentNavBarTime()), 500);
-  }, []);
+  }, [time]);
 
   return (<>
   <Navbar collapseOnSelect expand="sm" bg="success" variant="dark" id="nav2" className="shadow">
   <Container>
-  <><span className={`almost-white`}><span className={`bold`}>📒 Logged in as:</span> User</span></>
+  <><span className={`almost-white`}><span className={`bold`}>📒 Logged in as:</span> {getTokenUser()}</span></>
 
   <NavDropdown.Divider />
     <Navbar.Text>

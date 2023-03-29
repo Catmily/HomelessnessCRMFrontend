@@ -14,47 +14,47 @@ return (<Container><Container className={`p-4 main-content shadow mt-4 mb-4`}>
     <p>To get started, click on one of the tiles below.</p>
 
 <Container className={`d-inline-flex flex-wrap fade-in`}>
-    <Card className={`card-home card-light m-2 shadow`}>
+    <Card className={`card-home card-light m-2 shadow`}><a href="/cases">
   <Card.Img variant="top" src={CaseAdd} />
   <Card.ImgOverlay>
   <Card.Body>
     <Card.Title>Cases</Card.Title>
-  </Card.Body></Card.ImgOverlay>
+  </Card.Body></Card.ImgOverlay></a>
 </Card>
-<Card className={`card-home card-dark m-2 shadow`}>
+<Card className={`card-home card-dark m-2 shadow`}><a href="/search">
   <Card.Img variant="top" src={Search} />
   <Card.ImgOverlay>
   <Card.Body>
     <Card.Title>Search</Card.Title>
-  </Card.Body></Card.ImgOverlay>
+  </Card.Body></Card.ImgOverlay></a>
 </Card>
-<Card  className={`card-home card-light m-2 shadow`}>
+<Card  className={`card-home card-light m-2 shadow`}><a href="/metrics">
   <Card.Img variant="top" src={Graph} />
   <Card.ImgOverlay>
   <Card.Body>
     <Card.Title>At A Glance</Card.Title>
-  </Card.Body></Card.ImgOverlay>
+  </Card.Body></Card.ImgOverlay></a>
   </Card>
-<Card className={`card-home card-dark m-2 shadow`}>
+<Card className={`card-home card-dark m-2 shadow`}><a href="/safeguarding/add">
   <Card.Img variant="top" src={Safeguarding} />
   <Card.ImgOverlay>
   <Card.Body>
     <Card.Title>Safeguarding</Card.Title>
-  </Card.Body></Card.ImgOverlay>
+  </Card.Body></Card.ImgOverlay></a>
 </Card>
-<Card className={`card-home card-light m-2 shadow`}>
+<Card className={`card-home card-light m-2 shadow`}><a href="/profile">
   <Card.Img variant="top" src={Account} />
   <Card.ImgOverlay>
   <Card.Body>
     <Card.Title>My Profile</Card.Title>
-  </Card.Body></Card.ImgOverlay>
+  </Card.Body></Card.ImgOverlay></a>
 </Card>
 <Card className={`card-home card-dark m-2 shadow`}>
-  <Card.Img variant="top" src={Resources} />
+  <Card.Img variant="top" src={Resources} /><a href="/resources">
   <Card.ImgOverlay>
   <Card.Body>
     <Card.Title>Resources</Card.Title>
-  </Card.Body></Card.ImgOverlay>
+  </Card.Body></Card.ImgOverlay></a>
 </Card>
 <Card className={`card-home card-light m-2 shadow`}>
   <Card.Img variant="top" src={More} />

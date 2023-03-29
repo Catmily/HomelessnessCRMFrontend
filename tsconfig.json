@@ -19,6 +19,7 @@
     "isolatedModules": true,
     "strictNullChecks": false,
     "noEmit": true,
+    "noImplicitAny": false,
     "jsx": "react-jsx"
   },
   "include": [

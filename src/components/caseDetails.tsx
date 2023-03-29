@@ -1,11 +1,135 @@
+import { ReactElement, useEffect, useState } from "react";
 import { Form, Row, Col, Container, Button, Tab, Card, Nav, Dropdown } from "react-bootstrap";
+import PaginationWrapper, { OnChangeEventType } from "@vlsergey/react-bootstrap-pagination"
+import * as $ from 'jquery';
+import { ChangeCase, GetPersonNotes, UploadDocument, GetDocuments } from "../glue/DBConnector";
+import { useNavigate } from "react-router-dom";
+import { getPersonId } from "../glue/Auth";
 
-export function CaseDetails() {
+type Props = {
+    
+    caseDetails: any
+}
+
+
+let caseFieldType = {
+    accommodation_status: "Accommodation Status",
+    benefits_notes: "Benefits",
+    client_trauma: "History of Client Trauma",
+    client_violence: "History of Client Violence",
+    contact_with_family: "Contact with Family",
+    disabled_notes: "Disability",
+    education_status: "Education",
+    history_of_rough_sleeping: "Rough Sleeping",
+    income_sources: "Source(s) of Income",
+    lcl_aurthy_homelessness_status: "Local Authority Homelessness Case",
+    lgbt_notes: "LGBTQ+ Notes",
+    mental_health_diagnosis: "Diagnosed Mental Health Conditions",
+    mental_health_notes: "Mental Health Notes",
+    minority_status: "Minority Discrimination",
+    other_notes: "Other",
+    refugee_status: "Asylum & Refugee Status",
+    relationship_notes: "Relationship Status",
+    substance_use: "Substance Use",
+    summary: "Case Summary",
+    support_networks: "Clients' Support Networks",
+}
+
+
+export function CaseDetails({caseDetails} : Props) {
+
+    const [caseObject, setCaseObject] = useState<any>();
+    const [newCaseObject, setNewCaseObject] = useState<any>();
+    const [fields, setFields] = useState<JSX.Element[]>([]);
+    const [newFields, setNewFields] = useState<JSX.Element[]>([]);
+
+    const [changed, setChanged] = useState<boolean>(false)
+    const [formEnabled, setFormEnabled] = useState<boolean>(false)
+
+
+
+
+    useEffect(() => {
+        const func = async () => {
+            setCaseObject(caseDetails);
+            
+    }       
+        func()
+    }, []);
+
+    const addFields = (event: React.MouseEvent<HTMLElement>) => {
+        const name = (event.target as HTMLInputElement).name
+        const value = (event.target as HTMLInputElement).value
+
+        //@ts-ignore
+        setNewFields([...newFields, <><Form.Label column={true}>{caseFieldType[name.replace("_dropdown", "") as keyof typeof caseFieldType]}</Form.Label>
+            <Form.Control as="textarea" name={name.replace("_dropdown", "")} onChange={handleChange} rows={3} defaultValue={value as string} /></>]
+        )
+      };
+
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+
+        setNewCaseObject((prevState: any) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      };
+      
+
+      useEffect(() => {
+        if (changed)
+        {
+        const func = async () => {
+            await ChangeCase(newCaseObject);
+            setCaseObject(newCaseObject)
+            setChanged(false)
+            //@ts-ignore
+            setFields([...fields, newFields])
+            setNewFields([])
+    }       
+        func()
+}
+    }, [changed]);
+
+
+    useEffect(() => {
+        const func = async () => {
+            if (caseObject != undefined) {
+                //@ts-ignore
+                setFields(Object.entries(caseDetails).map(([key, value]) => (
+                    //@ts-ignore
+                    caseFieldType[key] ? 
+                    value ? 
+                    <>
+                    <Form.Label column={true}>{caseFieldType[key as keyof typeof caseFieldType]}</Form.Label>
+                    <Form.Control as="textarea" onChange={handleChange} rows={3} defaultValue={value as string} />
+                    </> : <></>
+                    : <></>
+                    )))
+                }
+    }       
+        func()
+    }, [caseObject]);
+
+    function filterDropdown(item: any)
+    {
+        if (caseObject) {
+            if (caseObject[item[0]]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     return (<Container className=" p-4">
-
-        <Form>
-
-            <Col>
+        <fieldset disabled={!formEnabled}>
+        <Form id="case">
+            
+            {fields}
+            {newFields}
+            
+            {/* <Col>
                 <Form.Label column={true}>Case Summary</Form.Label>
                 <Form.Control as="textarea" rows={4} placeholder="Case Summary" />
             </Col>
@@ -23,25 +147,126 @@ export function CaseDetails() {
                     <Form.Control type="text" placeholder="Actual End" />
                 </Col>
             </Row>
-            <br />
+            <br /> */}
 
             <p className="align-right">Last updated: 12/03/2023 14:12 by ABC</p>
-            <Row>
+        </Form></fieldset>
+        <Row>
                 <Col>
-                    <Button className={`float-end`}>✏️ Edit</Button>
-                    <Button className={`float-end`}>📄 Add</Button>
+                {formEnabled ? <><Button variant="danger" className={`float-end mx-0`} onClick={
+                            () => {
+                                setFormEnabled(!formEnabled)
+                                //@ts-ignore
+                                $('#case')[0].reset();
+                                setNewFields([])
+
+                            }}>🗙 Cancel</Button>                    
+                            <Dropdown>
+                            <Dropdown.Toggle variant="success" className="float-end mx-1 me-2" id="dropdown-basic">
+                            📄 Add Field
+                                        </Dropdown.Toggle>
+        
+                                        <Dropdown.Menu>
+                                        { Object.entries(caseFieldType).filter(filterDropdown).map(([key, value]) => (
+                                            //@ts-ignore
+                                            <Dropdown.Item onClick={addFields} name={key+"_dropdown"}>{value} {}</Dropdown.Item>
+                                        ))}
+        
+                                        </Dropdown.Menu>
+                                    </Dropdown><Button variant="danger" className={`float-end mx-1`} onClick={
+                        () => {
+                            setFormEnabled(!formEnabled)
+                            
+                            setChanged(true)
+                            
+
+                        }}>📥 Submit</Button></> : <Button className={`float-end`} onClick={
+                    () => {
+                        setFormEnabled(!formEnabled)
+                        setNewCaseObject(caseObject)
+                        
+                        
+                    }}>✏️ Edit</Button>}
+
 
                 </Col>
 
             </Row>
-        </Form></Container>)
+        
+        </Container>)
 }
 
 
-export function DocumentList() {
+export function DocumentList({caseDetails} : Props) {
+    const [filePath, setFilePath] = useState("");
+    const [file, setFile] = useState();
+
+    const [documents, setDocuments] = useState<Object>()
+    console.log(documents)
+
+    const [pages, setPages] =  useState<JSX.Element[]>([]);
+    const [pageSelectors, setPageSelectors] =  useState<JSX.Element[]>([]);
+    const [pageCurrentSelector, setCurrentSelector] = useState<JSX.Element[]>([]);
+    const [pageCurrentSelectorCount, setPageCurrentSelectorCount] = useState<number>(0);
+
+    useEffect(() => {
+        const func = async () => {
+
+            let doc_response = await GetDocuments(caseDetails['person_id']);
+            if (doc_response["data"] != undefined)
+            {
+                setDocuments(doc_response["data"]["message"])
+        
+            }            
+    }       
+        func()
+    }, []);
+
+
+    const uploadFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setFilePath(value);
+
+        const file = event.target.files[0];
+        //@ts-ignore
+        setFile(file)
+    };
+
+    useEffect(() => {
+        const func = async () => {
+            let path = filePath.split("/");
+            const fileName = filePath[filePath.length - 1]
+            console.log(file)
+            await UploadDocument(file, {
+            title: fileName,
+            description: "No description provided.",
+            filename: fileName,
+            file_path: null,
+            case_worker_id: getPersonId(),
+            uploaded_date: new Date().toISOString(),
+            dated: new Date().toISOString(),
+            person_id: caseDetails["person_id"]})
+        }
+
+
+        func()
+    }, [file])
+
     return (
         <Container className="shadow p-2">
-            <Row className="p-2"><Col><Button>📥 Upload Document</Button></Col>
+            <Row className="p-2"><Col>
+            <Form>
+            <Form.Label>📥 Upload Document: '</Form.Label>
+            <Form.Control
+            name="document-file"
+            type='file'
+            id='document-file'
+            onChange={uploadFileChange}
+        /></Form>
+        <br />
+
+            
+            </Col>
                 <Col>        <Dropdown>
                     <Dropdown.Toggle variant="success" className="float-end" id="dropdown-basic">
                         Document Type
@@ -109,79 +334,129 @@ export function DocumentList() {
     )
 }
 
-export function NoteList() {
+export function NoteList({caseDetails} : Props) {
+    const [pages, setPages] =  useState<JSX.Element[]>([]);
+    const [pageSelectors, setPageSelectors] =  useState<JSX.Element[]>([]);
+    const [pageCurrentSelector, setCurrentSelector] = useState<JSX.Element[]>([]);
+    const [pageCurrentSelectorCount, setPageCurrentSelectorCount] = useState<number>(0);
+
+    const [notes, setNotes] = useState<Object>()
+
+
+
+
+    function handlePagination(e: OnChangeEventType) {
+        const { name, value } = e.target;
+
+        setPageCurrentSelectorCount(value);
+      };
+      
+
+    useEffect(() => {
+        const func = async () => {
+            let note_response = await GetPersonNotes(caseDetails['person_id']);
+            if (note_response["data"] != undefined)
+            {
+                setNotes(note_response["data"]["message"])
+
+            }
+        }
+        
+        
+        func()},
+            [])
+
+            useEffect(() => {
+
+                SetCurrentSelectorList()
+        
+            },
+            [pageSelectors, pageCurrentSelectorCount])
+        
+            function SetCurrentSelectorList()
+            {
+                let nav: JSX.Element[] = [];
+        
+                for (let i=1; i<10; i++)
+                {
+                nav.push(pageSelectors[i+(pageCurrentSelectorCount*10)])
+                    
+                }
+                setCurrentSelector(nav)
+            }
+
+    useEffect(() => {
+
+        if (notes) {
+        console.log(Object.entries(notes))
+        let nav: JSX.Element[] = [];
+        let pages: JSX.Element[] = [];
+
+        let entries = Object.entries(notes);
+
+        for (let i=0; i<entries.length; i++)
+        {
+
+
+        nav.push(<Nav.Item>
+        <Nav.Link eventKey={`p${i}`}>{entries[i][1].title}
+        <p>Date: </p></Nav.Link></Nav.Item>)
+
+                pages.push(
+                    <Tab.Pane eventKey={`p${i}`}>
+                                    <Container className="p-3"><p>                                
+                                        <h2> {entries[i][1].title} </h2>
+                                <h3> <span className="bold">Date:</span> {entries[i][1].date} </h3>
+                                <h3> <span className="bold">Involved:</span> WIP</h3>
+
+                                <h3> <span className="bold">Note details:</span></h3>
+                                <p> {entries[i][1].note} </p>
+                                <h3> <span className="bold">Action plan:</span></h3>
+                                <p>                            <p> {entries[i][1].actions_to_take} </p>
+                                </p>
+                                <Button size="sm" className="float-end">Flag as Important</Button>
+                                <Button size="sm" className="float-end mx-2">Mark to Modify</Button></p></Container>
+                                </Tab.Pane>)
+                                    
+        }
+
+        
+        setPageSelectors(nav);        
+        setPages(pages);
+
+        SetCurrentSelectorList();
+
+    }},
+    [notes])
+
+    const navigate = useNavigate();
+
     return (<Tab.Container defaultActiveKey="p1">
         <Container>
             <Row>
                 <Col sm={3} id="selector" className={`shadow p-2`} >
                     <Nav variant="pills" className="flex-column">
-                        <Nav.Item>
-                            <Nav.Link eventKey="p1">Note 1</Nav.Link>
+                        
+                        {pageCurrentSelector}
+                            <br />  
+                                        
+                        <Button size="sm" className="float-end" onClick={() => {navigate(`/note/user/${caseDetails['person_id']}`)}}>📄 Add Note</Button>
+                                                <br /><br />
 
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="p2">Note 2</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="p3">Note 3</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="p4">Note 4</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="p5">Note 5</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="p6">Note 6</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="p7">Note 7</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <br />
-                            <Button size="sm" >⬅️</Button> 1/10 <Button size="sm">➡️</Button>
-                            <Button size="sm" className="float-end">📄</Button>
-                            <br /><br />
-
-                        </Nav.Item>
                     </Nav>
+                    <PaginationWrapper  value={pageCurrentSelectorCount} totalPages={5} onChange={handlePagination} size="sm">
+
+</PaginationWrapper>      
                 </Col>
                 <Col sm={9}>
                     <Tab.Content>
                         <Tab.Pane eventKey="p1">
                             <Container className="p-3 pb-5">
-                                <h2> Spoken to Local Authority </h2>
-                                <h3> <span className="bold">Date:</span> 12/03/2023 22:27:33</h3>
-                                <h3> <span className="bold">Involved:</span> xyz abc, bde fgh</h3>
 
-                                <h3> <span className="bold">Note details:</span></h3>
-                                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque orci sed magna gravida suscipit. Donec risus diam, vestibulum ut pulvinar aliquam, tincidunt in odio. Sed dapibus tincidunt orci, eu consequat arcu venenatis vel. Pellentesque vestibulum lorem ut vestibulum varius. Praesent id enim cursus, consectetur nibh vel, molestie leo. Vestibulum nulla justo, mattis id felis sed, ornare eleifend elit. Vestibulum aliquam nibh sed augue fringilla, quis volutpat ipsum facilisis. Integer arcu dolor, luctus non scelerisque at, molestie vitae magna. Sed ac urna orci. Donec in neque nec sem elementum dictum sed sed enim. Praesent vitae auctor justo. </p>
-                                <h3> <span className="bold">Action plan:</span></h3>
-                                <p>                            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque orci sed magna gravida suscipit. Donec risus diam, vestibulum ut pulvinar aliquam, tincidunt in odio. Sed dapibus tincidunt orci, eu consequat arcu venenatis vel. Pellentesque vestibulum lorem ut vestibulum varius. Praesent id enim cursus, consectetur nibh vel, molestie leo. Vestibulum nulla justo, mattis id felis sed, ornare eleifend elit. Vestibulum aliquam nibh sed augue fringilla, quis volutpat ipsum facilisis. Integer arcu dolor, luctus non scelerisque at, molestie vitae magna. Sed ac urna orci. Donec in neque nec sem elementum dictum sed sed enim. Praesent vitae auctor justo. </p>
-                                </p>
-                                <Button size="sm" className="float-end">Flag as Important</Button>
-                                <Button size="sm" className="float-end mx-2">Mark to Modify</Button>
 
                             </Container>
                         </Tab.Pane>
-                        <Tab.Pane eventKey="p2">
-                            <Container className="p-3"><p> Test </p></Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="p3">
-                            <Container className="p-3"><p> Test </p></Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="p4">
-                            <Container className="p-3"><p> Test </p></Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="p5">
-                            <Container className="p-3"><p> Test </p></Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="p6">
-                            <Container className="p-3"><p> Test </p></Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="p7">
-                            <Container className="p-3"><p> Test </p></Container>
-                        </Tab.Pane>
+                        {pages}
                     </Tab.Content>
                 </Col>
             </Row>
