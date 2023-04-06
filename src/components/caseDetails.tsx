@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { Form, Row, Col, Container, Button, Tab, Card, Nav, Dropdown } from "react-bootstrap";
 import PaginationWrapper, { OnChangeEventType } from "@vlsergey/react-bootstrap-pagination"
 import * as $ from 'jquery';
-import { ChangeCase, GetPersonNotes, UploadDocument, GetDocuments } from "../glue/DBConnector";
+import { ChangeCase, GetPersonNotes, UploadDocument, GetDocuments, GetDocument } from "../glue/DBConnector";
 import { useNavigate } from "react-router-dom";
 import { getPersonId } from "../glue/Auth";
 
@@ -202,26 +202,91 @@ export function DocumentList({caseDetails} : Props) {
     const [file, setFile] = useState();
 
     const [documents, setDocuments] = useState<Object>()
-    console.log(documents)
 
     const [pages, setPages] =  useState<JSX.Element[]>([]);
-    const [pageSelectors, setPageSelectors] =  useState<JSX.Element[]>([]);
-    const [pageCurrentSelector, setCurrentSelector] = useState<JSX.Element[]>([]);
-    const [pageCurrentSelectorCount, setPageCurrentSelectorCount] = useState<number>(0);
+    const [currentPageElements, setCurrentPageElements] = useState<JSX.Element[]>([]);
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
+    const [changed, setChanged] = useState<boolean>(false);
 
     useEffect(() => {
         const func = async () => {
 
             let doc_response = await GetDocuments(caseDetails['person_id']);
-            if (doc_response["data"] != undefined)
-            {
-                setDocuments(doc_response["data"]["message"])
-        
-            }            
+            setDocuments(doc_response["data"]["message"])       
     }       
         func()
     }, []);
 
+    useEffect(() => {
+        if (changed) {
+        const func = async () => {
+
+            let doc_response = await GetDocuments(caseDetails['person_id']);
+            setDocuments(doc_response["data"]["message"]);
+            setChanged(false);
+    }       
+        func()
+    }}, [changed]);
+
+    useEffect(() => {
+
+        if (documents) {
+        let pages: JSX.Element[] = [];
+        let entries = Object.entries(documents);
+
+        for (let i=0; i<entries.length; i++)
+        {
+
+                pages.push(
+                    <Card className="fileCard">
+                        <Container className="p-3">
+                            <h2>Title: {entries[i][1].title}</h2>
+                            <h3>Description: {entries[i][1].description}</h3>
+                            <p>Filename: {entries[i][1].filename}</p>
+                            <p>Dated: {entries[i][1].dated}</p>
+
+                            <Row>
+                                <Col><Button onClick={() => { GetDocument(entries[i][1].document_id) }}>👀 View </Button> <Button>❌ Delete</Button> <Button>ℹ️ Info</Button></Col>
+                            </Row>
+
+                        </Container>
+                </Card>)
+                                    
+        }
+
+        setPages(pages)
+    }},
+    [documents])
+
+    useEffect(() => {
+        SetCurrentPage()
+    }, [pages])
+
+
+    function handlePagination(e: OnChangeEventType) {
+        const { name, value } = e.target;
+
+        setCurrentPageNumber(value);
+      };
+      
+    
+
+    useEffect(() => {
+        SetCurrentPage()
+            
+    }, [currentPageNumber]);
+
+
+    function SetCurrentPage()
+    {
+        let page: JSX.Element[] = [];
+
+        for (let i=1; i<10; i++)
+        {
+            page.push(pages[i+(currentPageNumber*10)]) 
+        }
+        setCurrentPageElements(page)
+    }
 
     const uploadFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -229,13 +294,13 @@ export function DocumentList({caseDetails} : Props) {
 
         const file = event.target.files[0];
         //@ts-ignore
+
         setFile(file)
     };
 
     useEffect(() => {
         const func = async () => {
-            let path = filePath.split("/");
-            const fileName = filePath[filePath.length - 1]
+            const fileName = filePath.replace(/^.*[\\\/]/, '')
             console.log(file)
             await UploadDocument(file, {
             title: fileName,
@@ -246,6 +311,8 @@ export function DocumentList({caseDetails} : Props) {
             uploaded_date: new Date().toISOString(),
             dated: new Date().toISOString(),
             person_id: caseDetails["person_id"]})
+
+            setChanged(true)
         }
 
 
@@ -280,56 +347,13 @@ export function DocumentList({caseDetails} : Props) {
                 </Dropdown></Col>
             </Row>
 
+                <Container className="d-flex flex-wrap">
+                {currentPageElements}
+                </Container>
+            <PaginationWrapper  value={currentPageNumber} totalPages={5} onChange={handlePagination} size="sm">
 
-            <Row>
-                <Col>
-                    <Card>
-                        <Row className="p-3">
-                            <Container >
-                                <h2>Some info</h2>
-                                <p>Some other info</p>
-                                <Row>
-                                    <Col><Button>👀 View </Button> <Button>❌ Delete</Button> <Button>ℹ️ Info</Button></Col>
-                                </Row>
-
-                            </Container>
-
-                        </Row>
-
-                    </Card></Col>
-                <Col>
-                    <Card>
-                        <Row className="p-3">
-                            <Container >
-                                <h2>Some info</h2>
-                                <p>Some other info</p>
-                                <Row>
-                                    <Col><Button>👀 View </Button> <Button>❌ Delete</Button> <Button>ℹ️ Info</Button></Col>
-                                </Row>
-
-                            </Container>
-
-                        </Row>
-
-                    </Card></Col>
-                <Col>
-                    <Card>
-                        <Row className="p-3">
-                            <Container >
-                                <h2>Some info</h2>
-                                <p>Some other info</p>
-                                <Row>
-                                    <Col><Button>👀 View </Button> <Button>❌ Delete</Button> <Button>ℹ️ Info</Button></Col>
-                                </Row>
-
-                            </Container>
-
-                        </Row>
-
-                    </Card></Col>
-            </Row>
+</PaginationWrapper>      
             <br />
-            <Button size="sm" >⬅️</Button> 1/10 <Button size="sm">➡️</Button>
         </Container>
     )
 }
@@ -388,7 +412,6 @@ export function NoteList({caseDetails} : Props) {
     useEffect(() => {
 
         if (notes) {
-        console.log(Object.entries(notes))
         let nav: JSX.Element[] = [];
         let pages: JSX.Element[] = [];
 

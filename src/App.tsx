@@ -74,7 +74,7 @@ function App() {
       <Route path="/cases/" element={<AuthenticatedRoute><Cases /></AuthenticatedRoute>} />
       <Route path="/note/user/:id" element={<AuthenticatedRoute><AddNote /></AuthenticatedRoute>} />
       <Route path="/search/" element={<AuthenticatedRoute><Search /></AuthenticatedRoute>} />
-      <Route path="/safeguarding/add" element={<AuthenticatedRoute><AddSafeguardingNote /></AuthenticatedRoute>} />
+      <Route path="/safeguarding/user/add/:id" element={<AuthenticatedRoute><AddSafeguardingNote /></AuthenticatedRoute>} />
       <Route path='*' element={<FourOhFour />}/>
     </Routes>
   )}

@@ -1,7 +1,7 @@
 import { Button, Card, Col, Container, Form, Nav, Row, Tab } from "react-bootstrap";
 import Footer from "../components/footer";
 import { NoteList, CaseDetails, DocumentList } from "../components/caseDetails";
-import { GetFullCase } from "../glue/DBConnector";
+import { GetFullCase, WholePersonExport } from "../glue/DBConnector";
 
 import HomepageLayout from "../layouts/homepageLayout";
 import StandardLayout from "../layouts/standardLayout";
@@ -111,7 +111,9 @@ export default function Case() {
                                     <Tab.Pane eventKey="p7">
                                         <Card className={`card-dark shadow`}>
                                             <Container className={`shadow p-3`}>
-                                                <Button>Export Profile</Button>
+                                                <Button onClick={() => { 
+                                                    //@ts-ignore
+                                                    WholePersonExport(caseDetails['person_id'])}} >Export Profile</Button>
                                                 <Button className="mx-2">Mark for Deletion</Button>
                                                 </Container>
                                         </Card>

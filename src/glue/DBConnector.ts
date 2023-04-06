@@ -1,4 +1,5 @@
 import axios from "axios"
+import fileDownload from "js-file-download";
 import { useParams } from "react-router-dom";
 import { addTokenHeader } from './Auth';
 
@@ -57,24 +58,41 @@ export async function AddNote(noteDetails: Object) {
     return res
 }
 
-export async function GetDocuments(personID: string) {
-    const res = await axios.put('http://localhost/api/doc/get', {person_id: personID}, {headers: addTokenHeader()})
+export async function AddSafeguardingNote(safeguardNoteDetails: Object) {
+    const res = await axios.put('http://localhost/api/safeguarding/add', safeguardNoteDetails, {headers: addTokenHeader()})
     console.log(res)
     return res
 }
 
+export async function GetDocuments(personID: string) {
+    const res = await axios.put('http://localhost/api/docs/get', {person_id: personID}, {headers: addTokenHeader()})
+    console.log(res)
+    return res
+}
+
+export async function GetDocument(documentID: string) {
+    
+    const res = await axios.put('http://localhost/api/doc/get', {document_id: documentID}, {headers: addTokenHeader(), responseType:"blob"})
+    console.log(res["data"])
+    console.log()
+    const config = {responseType: 'blob'};
+    fileDownload(res["data"], res["headers"]["content-disposition"].replace("attachment; filename=", ""));
+}
+
+
+export async function GetDocumentInfo(documentID: string) {
+    
+    const res = await axios.put('http://localhost/api/info/get', {document_id: documentID}, {headers: addTokenHeader()})
+    return res
+}
+
+
 export async function UploadDocument(document, documentDetails: Object) {
-    // const form = new FormData();
-    // form.append('file', document);
-
-    //@ts-ignore
-    //form.append("info", documentDetails);
-
     let headers = addTokenHeader();
     headers["Content-Type"] = 'multipart/form-data'
 
     const res = await axios.post('http://localhost/api/doc', {file: document, info: documentDetails}, {headers: headers})
-    console.log(res)
+
     return res
 }
 
@@ -87,5 +105,11 @@ export async function GetPersonNotes(personID: string) {
 }
 
 
+export async function WholePersonExport(personID: string) {
+    const res = await axios.put('http://localhost/api/export/get', {person_id: personID}, {headers: addTokenHeader(), responseType:"blob"})
+    const config = {responseType: 'blob'};
+    fileDownload(res["data"], res["headers"]["content-disposition"].replace("attachment; filename=", ""));
+    return res
+}
 
 

@@ -119,6 +119,11 @@ h1 {
 	animation-duration: 0.3s;
 }
 
+.fileCard {
+	min-width: 250px;
+	min-height: 200px;
+}
+
 @keyframes fadeInOpacity {
 	0% {
 		opacity: 0.5;

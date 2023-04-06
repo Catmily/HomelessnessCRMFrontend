@@ -6,7 +6,7 @@ import { Options } from "easymde";
 import "easymde/dist/easymde.min.css";
 import { getPersonId } from '../glue/Auth';
 import { useParams } from 'react-router-dom';
-import { AddNote, GetUserProfile } from '../glue/DBConnector';
+import { AddNote, AddSafeguardingNote, GetUserProfile } from '../glue/DBConnector';
 
 type Props = {
     safeguarding: boolean
@@ -45,7 +45,8 @@ export const NoteComponent = ({safeguarding}: Props) => {
         const func = async () => {
             const case_worker_id = getPersonId()
             console.log(date)
-            await AddNote({
+            
+            const res = await AddNote({
                 "person_id": id,
                 "case_worker_id": case_worker_id,
                 "note": note,
@@ -56,6 +57,15 @@ export const NoteComponent = ({safeguarding}: Props) => {
                 "incident_date": new Date().toISOString(),
                 "priority": priority
             })
+
+            if (safeguarding) {
+                console.log(res)
+                AddSafeguardingNote({
+                    //@ts-ignore
+                    "note_id": res["data"]["row_id"],
+            })
+
+            }
         }
         if (setChanged)
         {
