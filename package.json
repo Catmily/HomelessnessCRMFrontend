@@ -28,9 +28,10 @@
     "react-router-loading": "^1.0.0",
     "react-scripts": "5.0.1",
     "react-simplemde-editor": "^5.2.0",
+    "rechart": "^0.0.1",
+    "recharts": "^2.5.0",
     "save-dev": "^0.0.1-security",
     "sort-by": "^1.2.0",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "peerDependencies": {
@@ -63,6 +64,14 @@
   },
   "devDependencies": {
     "@types/node-sass": "^4.11.3",
-    "node-sass": "^7.0.3"
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "eslint": "^8.39.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "node-sass": "^7.0.3",
+    "typescript": "^5.0.4"
   }
 }

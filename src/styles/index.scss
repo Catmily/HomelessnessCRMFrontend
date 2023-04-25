@@ -7,7 +7,7 @@
 @import "../../node_modules/bootstrap/scss/variables";
 
 $custom-colors: (
-  "primary": #198754,
+	"primary": #198754,
 );
 
 
@@ -18,7 +18,8 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 @import "../../node_modules/bootstrap/scss/mixins";
 @import "../../node_modules/bootstrap/scss/buttons";
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
 	background-color: #23a86a;
 }
 
@@ -30,7 +31,8 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 	background-color: #aaaa;
 }
 
-h1, h2 {
+h1,
+h2 {
 	font-family: 'Rowdies', cursive;
 }
 
@@ -44,31 +46,31 @@ a.nav-link {
 h1 {
 	font-weight: 300;
 	font-size: 2.5em;
-  }
-  
-  h2 {
+}
+
+h2 {
 	font-size: 1.5em;
 	font-weight: 300;
-  }
-  
-  h3 {
+}
+
+h3 {
 	font-size: 1.17em;
 	font-weight: 500;
-  }
-  
-  h4 {
+}
+
+h4 {
 	font-size: 1.00em;
 	font-weight: 500;
-  }
-  
-  h5 {
+}
+
+h5 {
 	font-size: 0.83em;
-  }
-  
-  h6 {
+}
+
+h6 {
 	font-size: 0.67em;
-  }
-  
+}
+
 
 
 * {
@@ -100,7 +102,7 @@ h1 {
 }
 
 .almost-white {
-    color: #f3efefdd;
+	color: #f3efefdd;
 }
 
 .main-content {
@@ -128,6 +130,7 @@ h1 {
 	0% {
 		opacity: 0.5;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -165,6 +168,31 @@ body {
 	padding: 20px;
 }
 
+
+
+@media screen and (max-width: 955px) {
+	#nav2 {
+		min-height: 60px !important;
+	}
+}
+
+@media screen and (max-width: 595px) {
+	.card-home {
+		min-height: 180px;
+		min-width: 180px;
+		padding: 10px;
+	}
+
+	.card-img-top {
+		vertical-align: bottom;
+		padding: 20px;
+		padding-top: 70px;
+	}
+
+	#nav2 {
+		min-height: 120px !important;
+	}
+}
 
 
 .card-dark {
@@ -222,4 +250,8 @@ a.btn:visited {
 
 .red {
 	color: #dd0000;
+}
+
+.selected_dropdown {
+	background-color: #dadada;
 }
