@@ -1,51 +1,52 @@
 import {
   Container,
-  Dropdown,
   Form,
-  Row,
-  Col,
   Button,
-  Card,
-} from "react-bootstrap";
-import StandardLayout from "../layouts/standardLayout";
-import Table from "react-bootstrap/Table";
-import { useEffect, useState } from "react";
+  Card
+} from 'react-bootstrap';
+import StandardLayout from '../layouts/standardLayout';
+import Table from 'react-bootstrap/Table';
+import { type ReactElement, useEffect, useState } from 'react';
 import {
   GetCasesGeneric,
   GetDocumentsGeneric,
   GetKeysDB,
   GetNotesGeneric,
-  GetPeopleGeneric,
-  IsCaseWorker,
-  IsSupervisor,
-} from "../glue/DBConnector";
+  GetPeopleGeneric
+} from '../glue/DBConnector';
 import {
   caseFieldType,
   documentType,
   noteType,
-  personFieldType,
-} from "../glue/typeTranslation";
-import $ from "jquery";
-import { isJWTCaseWorker, isJWTSupervisor } from "../glue/Auth";
+  personFieldType
+} from '../glue/typeTranslation';
+import { isJWTCaseWorker, isJWTSupervisor } from '../glue/Auth';
+import { FiveZeroZero } from './500';
 
-export default function Search() {
+export default function Search (): ReactElement<any, any> {
+  const [errorWhy, setErrorWhy] = useState('');
+
   const [caseBox, setCaseBox] = useState(false);
   const [documentBox, setDocumentBox] = useState(false);
   const [clientBox, setClientBox] = useState(false);
 
   const [noteBox, setNoteBox] = useState(false);
 
-  const [searchElements, setSearchElements] = useState<Object>({});
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const [searchElements, setSearchElements] = useState<unknown>({});
 
-  const [searchElementChanges, setSearchElementChanges] = useState<Object>({
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const [searchElementChanges, setSearchElementChanges] = useState<unknown>({
     case: [],
     document: [],
     note: [],
-    person: [],
+    person: []
   });
 
   const [searchResultElements, setSearchResultElements] =
     useState<JSX.Element>();
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const [searchObjects, setSearchObjects] = useState<Object[]>();
   const [searchResultCount, setResultCount] = useState(0);
 
@@ -55,29 +56,31 @@ export default function Search() {
 
   const [keys, setDBKeys] = useState(Object);
 
-  //@ts-ignore
-
   useEffect(() => {
     if (searchObjects) {
-      const ca_obj = searchObjects["case"],
-        note_obj = searchObjects["note"];
-      const doc_obj = searchObjects["document"],
-        per_obj = searchObjects["person"];
-      let tempCase = [],
-        tempNote = [],
-        tempPerson = [],
-        tempDocument = [];
-      for (let element in ca_obj) {
+      // dot notation not appropriate
+
+      const caObj = searchObjects['case'];
+      const noteObj = searchObjects['note'];
+      const docObj = searchObjects['document'];
+      const perObj = searchObjects['person'];
+
+      const tempCase = [];
+      const tempNote = [];
+      const tempPerson = [];
+      const tempDocument = [];
+      for (const element in caObj) {
+        const caseId = caObj[element].case_id;
         tempCase.push(
           <tr>
-            <td>Case (ID: {ca_obj[element]["case_id"]})</td>
-            <td>{ca_obj[element]["date"]}</td>
-            <td>{ca_obj[element]["person"]}</td>
-            <td>{ca_obj[element]["summary"]}</td>
+            <td>Case (ID: case_id)</td>
+            <td>{caObj[element].date}</td>
+            <td>{caObj[element].person}</td>
+            <td>{caObj[element].summary}</td>
             <td>
               <a
                 href={
-                  ("/case/" + ca_obj[element]["case_id"]) as unknown as string
+                  (`/case/${caseId}`) as unknown as string
                 }
               >
                 Link (to case)
@@ -86,27 +89,28 @@ export default function Search() {
           </tr>
         );
       }
-      for (let element in note_obj) {
-        let note_id_text = "Note (ID: " + note_obj[element][1]["note_id"] + ")";
+      for (const element in noteObj) {
+        const noteId = noteObj[element].note_id;
+        const personId = noteObj[element].personId;
 
-        if (note_obj[element][0]["safeguarding_id"]) {
-          note_id_text +=
-            ", Safeguarding Note (ID: " +
-            note_obj[element][0]["safeguarding_id"] +
-            ")";
+        let noteIdText = `Note (ID: ${noteId})`
+
+        if (noteObj[element][0].safeguarding_id) {
+          const safeguardingId = noteObj[element].safeguarding_id;
+          noteIdText +=
+            `, Safeguarding Note (ID: ${safeguardingId})`
         }
 
         tempNote.push(
           <tr>
-            <td>{note_id_text}</td>
-            <td>{note_obj[element][1]["note_date"]}</td>
-            <td>{note_obj[element][1]["person_id"]}</td>
-            <td>{note_obj[element][1]["title"]}</td>
+            <td>{noteIdText}</td>
+            <td>{noteObj[element][1].note_date}</td>
+            <td>{noteObj[element][1].person_id}</td>
+            <td>{noteObj[element][1].title}</td>
             <td>
               <a
                 href={
-                  ("/profile/" +
-                    note_obj[element][1]["person_id"]) as unknown as string
+                  (`/profile/${personId}`) as unknown as string
                 }
               >
                 Link (to profile)
@@ -116,18 +120,20 @@ export default function Search() {
         );
       }
 
-      for (let element in doc_obj) {
+      for (const element in docObj) {
+        const documentId = docObj[element].document_id;
+        const personId = docObj[element].personId;
+
         tempDocument.push(
           <tr>
-            <td>Document (ID: {doc_obj[element]["document_id"]})</td>
-            <td>{doc_obj[element]["date"]}</td>
-            <td>{doc_obj[element]["person_id"]}</td>
-            <td>{doc_obj[element]["title"]}</td>
+            <td>Document (ID: {documentId})</td>
+            <td>{docObj[element].date}</td>
+            <td>{docObj[element].person_id}</td>
+            <td>{docObj[element].title}</td>
             <td>
               <a
                 href={
-                  ("/profile/" +
-                    doc_obj[element]["person_id"]) as unknown as string
+                  (`/profile/${personId}`) as unknown as string
                 }
               >
                 Link (to profile)
@@ -136,24 +142,26 @@ export default function Search() {
           </tr>
         );
       }
-      for (let element in per_obj) {
-        let person_id_text =
-          "Person (ID: " + per_obj[element][1]["person_id"] + ")";
-        if (per_obj[element][0]["staff_id"]) {
-          person_id_text +=
-            ", Staff (ID: " + per_obj[element][0]["staff_id"] + ")";
+      for (const element in perObj) {
+        const personId = perObj[element][1].person_id;
+
+        let personIdText = `Person (ID: ${personId})`
+
+        if (perObj[element][0].staff_id) {
+          const staffId = perObj[element].staff_id;
+          personIdText += `, Staff (ID: ${staffId})`
         }
+
         tempPerson.push(
           <tr>
-            <td>{person_id_text}</td>
-            <td>{per_obj[element][1]["date"]}</td>
-            <td>{per_obj[element][1]["preferred_name"]}</td>
-            <td>DOB: {per_obj[element][1]["dob"]}</td>
+            <td>{personIdText}</td>
+            <td>{perObj[element][1].date}</td>
+            <td>{perObj[element][1].preferred_name}</td>
+            <td>DOB: {perObj[element][1].dob}</td>
             <td>
               <a
                 href={
-                  ("/profile/" +
-                    per_obj[element][1]["person_id"]) as unknown as string
+                  (`/profile/${personId}`) as unknown as string
                 }
               >
                 Link (to profile)
@@ -163,69 +171,72 @@ export default function Search() {
         );
       }
 
-      const final_temp = [].concat(
+      const finalTemp = [].concat(
         tempCase,
         tempNote,
         tempPerson,
         tempDocument
       );
-      //@ts-ignore
-      setSearchResultElements(final_temp);
-      setResultCount(final_temp.length);
+
+      setSearchResultElements(finalTemp as any);
+      setResultCount(finalTemp.length);
     }
   }, [searchObjects]);
 
   useEffect(() => {
     if (submitted) {
-      const func = async () => {
-        let people_res,
-          note_res,
-          case_res,
-          document_res = null;
+      const func = async (): Promise<void> => {
+        let peopleRes: any;
+        let noteRes: any;
+        let caseRes: any;
+        let documentRes = null;
 
-        if (caseBox) {
-          let res = await GetCasesGeneric(searchElementChanges["case"]);
-          case_res = res["data"]["message"];
-        }
-        if (noteBox) {
-          let res = await GetNotesGeneric(searchElementChanges["note"]);
-          note_res = res["data"]["message"];
-        }
-        if (clientBox) {
-          let res = await GetPeopleGeneric(searchElementChanges["person"]);
+        try {
+          if (caseBox) {
+            const res = await GetCasesGeneric(searchElementChanges['case']);
+            caseRes = res.data.message;
+          }
+          if (noteBox) {
+            const res = await GetNotesGeneric(searchElementChanges['note']);
+            noteRes = res.data.message;
+          }
+          if (clientBox) {
+            const res = await GetPeopleGeneric(searchElementChanges['person']);
+            peopleRes = res.data.message;
+          }
 
-          people_res = res["data"]["message"];
-        }
-
-        if (documentBox) {
-          let res = await GetDocumentsGeneric(searchElementChanges["document"]);
-          document_res = res["data"]["message"];
+          if (documentBox) {
+            const res = await GetDocumentsGeneric(searchElementChanges['document']);
+            documentRes = res.data.message;
+          }
+        } catch (e) {
+          alert('Error in search. Please check your query and try again.')
         }
 
         setSearchObjects((prevState) => ({
           ...prevState,
-          case: case_res ? case_res : [],
-          note: note_res ? note_res : [],
-          person: people_res ? people_res : [],
-          document: document_res ? document_res : [],
+          case: caseRes || [],
+          note: noteRes || [],
+          person: peopleRes || [],
+          document: documentRes || []
         }));
       };
 
-      func();
+      void func();
     }
     setSubmitted(false);
   }, [submitted]);
 
   const handleChangeSearchBox = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  ): void => {
     const { name, value } = event.target;
 
-    const s = name.split("|");
+    const s = name.split('|');
 
     const type = s[1];
     const fieldName = s[0];
-    if (s[2] != "field") {
+    if (s[2] !== 'field') {
       return;
     }
 
@@ -233,213 +244,235 @@ export default function Search() {
       ...prevState,
       [type]: {
         ...prevState[type],
-        [fieldName]: value,
-      },
+        [fieldName]: value
+      }
     }));
   };
 
   useEffect(() => {}, [searchElementChanges]);
 
-  //GetKeysDB()
   useEffect(() => {
-    const func = async () => {
-      let res = await GetKeysDB([
-        "Person",
-        "Case",
-        "Note",
-        "Staff",
-        "Document",
-        "SafeguardingNotes",
-      ]);
-      let data = res["data"]["models"];
+    const func = async (): Promise<void> => {
+      try {
+        const res = await GetKeysDB([
+          'Person',
+          'Case',
+          'Note',
+          'Staff',
+          'Document',
+          'SafeguardingNotes'
+        ]);
+        const data = res.data.models;
 
-      // remove id fields
+        // remove id fields
 
-      for (let key in data) {
-        data[key] = data[key].filter((item) => !item.includes("_id"));
+        for (const key in data) {
+          data[key] = data[key].filter((item: string | string[]) => !item.includes('_id'));
+        }
+        setDBKeys(data);
+      } catch (e) {
+        setErrorWhy(`Cannot talk to the database to see what you can search.
+      This is unlikely something you can fix yourself.`)
       }
-      setDBKeys(data);
-    };
-    func();
+    }
+    void func();
   }, []);
 
-  function makeBoxes(names, type) {
-    let boxes = [];
-    if (type == "case") {
-      for (const name of names)
+  function makeBoxes (names: any, type: string): any {
+    const boxes = [];
+    if (type === 'case') {
+      for (const name of names) {
         boxes.push(
-          <div className={"d-inline-block"}>
-            <Form.Label column={true}>
+          <div className={'d-inline-block'}>
+            <Form.Label column htmlFor={`${name}|${type}|field`}>
               Case - {caseFieldType[`${name}`]}
             </Form.Label>
-
             <Form.Control
-              type="text"
+              type='text'
               onChange={handleChangeSearchBox}
               placeholder={
                 caseFieldType[`${name}`] ? caseFieldType[`${name}`] : <></>
               }
               name={`${name}|${type}|field`}
-            ></Form.Control>
+              id={`${name}|${type}|field`}
+             />
           </div>
         );
+      }
     }
-    if (type == "person") {
-      for (const name of names)
+    if (type === 'person') {
+      for (const name of names) {
         boxes.push(
-          <div className={"d-inline-block"}>
-            <Form.Label>Person - {personFieldType[`${name}`]}</Form.Label>
+          <div className={'d-inline-block'}>
+            <Form.Label htmlFor={`${name}|${type}|field`}>Person - {personFieldType[`${name}`]}</Form.Label>
             <Form.Control
-              type="text"
+              type='text'
+              id={`${name}|${type}|field`}
               onChange={handleChangeSearchBox}
               placeholder={
                 personFieldType[`${name}`] ? personFieldType[`${name}`] : <></>
               }
               name={`${name}|${type}|field`}
-            ></Form.Control>
+             />
           </div>
         );
+      }
     }
 
-    if (type == "note") {
-      for (const name of names)
+    if (type === 'note') {
+      for (const name of names) {
         boxes.push(
-          <div className={"d-inline-block"}>
-            <Form.Label>Note - {noteType[`${name}`]}</Form.Label>
+          <div className={'d-inline-block'}>
+            <Form.Label htmlFor={`${name}|${type}|field`}>Note - {noteType[`${name}`]}</Form.Label>
             <Form.Control
-              type="text"
+              type='text'
+              id={`${name}|${type}|field`}
               onChange={handleChangeSearchBox}
               placeholder={noteType[`${name}`] ? noteType[`${name}`] : <></>}
               name={`${name}|${type}|field`}
-            ></Form.Control>
+             />
           </div>
         );
+      }
     }
-    if (type == "document") {
-      for (const name of names)
+    if (type === 'document') {
+      for (const name of names) {
         boxes.push(
-          <div className={"d-inline-block"}>
-            <Form.Label>Document - {documentType[`${name}`]}</Form.Label>
+          <div className={'d-inline-block'}>
+            <Form.Label htmlFor={`${name}|${type}|field`}>Document - {documentType[`${name}`]}</Form.Label>
             <Form.Control
-              type="text"
+              id={`${name}|${type}|field`}
+              type='text'
               onChange={handleChangeSearchBox}
               placeholder={
                 documentType[`${name}`] ? documentType[`${name}`] : <></>
               }
               name={`${name}|${type}|field`}
-            ></Form.Control>
+             />
           </div>
         );
+      }
     }
     return boxes;
   }
 
   useEffect(() => {}, [searchElements]);
 
-  function setBoxes(type) {
+  function setBoxes (type: string): void {
     const b = keys[type];
     setSearchElements((prevState) => ({
       ...prevState,
-      [type]: makeBoxes(b, type),
+      [type]: makeBoxes(b, type)
     }));
   }
+
+  if (errorWhy !== '') {
+    return <FiveZeroZero howToResolve={errorWhy} container />
+  }
+
   return (
     <StandardLayout
       content={
-        <Container className={`p-4 main-content shadow mt-4 mb-4`}>
+        <Container className={'p-4 main-content shadow mt-4 mb-4'}>
           <h1>Search</h1>
           <Form>
-            <Form.Label column={true}>Search in: </Form.Label>
+            <p>Search in: </p>
             <Form.Check
-              name="clients_box"
-              className="mx-1 my-2"
-              label="People"
-              type="checkbox"
+              id='clients_box'
+              name='clients_box'
+              className='mx-1 my-2'
+              label='People'
+              type='checkbox'
               onClick={() => {
                 setClientBox(!clientBox);
-                setBoxes("person");
+                setBoxes('person');
               }}
             />
 
-            {clientBox ? (
-              <div className={"d-flex flex-wrap"}>
-                {searchElements["person"]}
-              </div>
-            ) : (
-              <></>
-            )}
+            {clientBox
+              ? (
+                <div className={'d-flex flex-wrap'}>
+                  {searchElements['person']}
+                </div>
+                )
+              : (
+                <></>
+                )}
 
-            {isCaseWorker || isSupervisor ? (
-              <>
-                <Form.Check
-                  className="mx-1"
-                  name="documents_box"
-                  label="Documents"
-                  type="checkbox"
-                  onClick={() => {
-                    setDocumentBox(!documentBox);
-                    setBoxes("document");
-                  }}
+            {isCaseWorker || isSupervisor
+              ? (
+                <>
+                  <Form.Check
+                    className='mx-1'
+                    id='documents_box'
+                    name='documents_box'
+                    label='Documents'
+                    type='checkbox'
+                    onClick={() => {
+                      setDocumentBox(!documentBox);
+                      setBoxes('document');
+                    }}
                 />
-                {documentBox ? (
-                  <div className={"d-flex flex-wrap"}>
-                    {searchElements["document"]}
-                  </div>
-                ) : (
-                  <></>
-                )}
+                  {documentBox
+                    ? (
+                      <div className={'d-flex flex-wrap'}>
+                        {searchElements['document']}
+                      </div>
+                      )
+                    : (
+                      <></>
+                      )}
 
-                <Form.Check
-                  className="mx-1 my-2"
-                  name="cases_box"
-                  label="Cases"
-                  type="checkbox"
-                  onClick={() => {
-                    setCaseBox(!caseBox);
-                    setBoxes("case");
-                  }}
+                  <Form.Check
+                    id='cases_box'
+                    className='mx-1 my-2'
+                    name='cases_box'
+                    label='Cases'
+                    type='checkbox'
+                    onClick={() => {
+                      setCaseBox(!caseBox);
+                      setBoxes('case');
+                    }}
                 />
-                {caseBox ? (
-                  <div className={"d-flex flex-wrap"}>
-                    {searchElements["case"]}
-                  </div>
-                ) : (
-                  <></>
-                )}
+                  {caseBox
+                    ? (
+                      <div className={'d-flex flex-wrap'}>
+                        {searchElements['case']}
+                      </div>
+                      )
+                    : (
+                      <></>
+                      )}
 
-                {clientBox ? (
-                  <div className={"d-flex flex-wrap"}>
-                    {searchElements["person"]}
-                  </div>
-                ) : (
-                  <></>
-                )}
-
-                <Form.Check
-                  name="notes_box"
-                  className="mx-1 my-2"
-                  label="Notes"
-                  type="checkbox"
-                  onClick={() => {
-                    setNoteBox(!noteBox);
-                    setBoxes("note");
-                  }}
+                  <Form.Check
+                    id='notes_box'
+                    name='notes_box'
+                    className='mx-1 my-2'
+                    label='Notes'
+                    type='checkbox'
+                    onClick={() => {
+                      setNoteBox(!noteBox);
+                      setBoxes('note');
+                    }}
                 />
-                {noteBox ? (
-                  <div className={"d-flex flex-wrap"}>
-                    {searchElements["note"]}
-                  </div>
-                ) : (
-                  <></>
+                  {noteBox
+                    ? (
+                      <div className={'d-flex flex-wrap'}>
+                        {searchElements['note']}
+                      </div>
+                      )
+                    : (
+                      <></>
+                      )}
+                </>
+                )
+              : (
+                <></>
                 )}
-              </>
-            ) : (
-              <></>
-            )}
 
             <Button
-              size="lg"
-              className="my-3"
+              size='lg'
+              className='my-3'
               onClick={() => {
                 setSubmitted(!submitted);
               }}
@@ -447,14 +480,14 @@ export default function Search() {
               📥 Submit Form
             </Button>
           </Form>
-          <Card className={`card-dark shadow p-2`}>
+          <Card className={'card-dark shadow p-2'}>
             <h3>
-              There {searchResultCount == 1 ? "is " : "are "}
-              {searchResultCount + " "}
-              match{searchResultCount == 1 ? "" : "es"} for your search result.
+              There {searchResultCount === 1 ? 'is ' : 'are '}
+              {`${searchResultCount} `}
+              match{searchResultCount === 1 ? '' : 'es'} for your search result.
             </h3>
 
-            <Table id="results" striped bordered hover responsive>
+            <Table id='results' striped bordered hover responsive>
               <thead>
                 <tr>
                   <th>📁 Type</th>

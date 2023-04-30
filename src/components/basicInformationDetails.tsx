@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable multiline-ternary */
+import { useEffect, useState } from 'react';
 import {
   Container,
   Row,
@@ -6,10 +7,9 @@ import {
   Button,
   Form,
   InputGroup,
-  Modal,
-} from "react-bootstrap";
-import * as $ from "jquery";
-import { isoToDate } from "../glue/Other";
+  Modal
+} from 'react-bootstrap';
+import * as $ from 'jquery';
 import {
   GetPersonSensitive,
   GetUserProfile,
@@ -21,25 +21,27 @@ import {
   RemovePerson,
   SetPersonSensitiveProfile,
   SetUserProfile,
-  SetUserProfileAdd,
-} from "../glue/DBConnector";
-import { useNavigate } from "react-router-dom";
-import { isJWTCaseWorker, isJWTSupervisor } from "../glue/Auth";
-type Props = {
-  user: string;
-  editMode: boolean;
-};
+  SetUserProfileAdd
+} from '../glue/DBConnector';
+import { useNavigate } from 'react-router-dom';
+import { FiveZeroZero } from '../pages/500';
+import { isJWTSupervisor } from '../glue/Auth';
+interface Props {
+  user: string
+  editMode: boolean
+}
 
 // interface FormState {
 //     [key: string]: string;
 //   }
 
-export default function BasicInformationDetails({
+export default function BasicInformationDetails ({
   user,
-  editMode = false,
+  editMode = false
 }: Props) {
   const [sensitiveVisible, setSensitiveVisible] = useState(false);
 
+  const [userId, setUserId] = useState<string>('');
   const [userData, setUserData] = useState(Object);
   const [userDataCopy, setUserDataCopy] = useState(Object);
 
@@ -55,8 +57,9 @@ export default function BasicInformationDetails({
   const [changed, setChanged] = useState<boolean>(false);
 
   const [nukeModalShow, setNukeModalShow] = useState(false);
+  const [errorWhy, setErrorWhy] = useState('');
 
-  const handleClose = () => setNukeModalShow(false);
+  const handleClose = () => { setNukeModalShow(false); };
 
   const navigate = useNavigate();
 
@@ -64,33 +67,40 @@ export default function BasicInformationDetails({
     const func = async () => {
       if (!editMode) {
         if (!isLoaded) {
-          const personProfile = await GetUserProfile(user);
-          setUserData(personProfile.data.message["0"]);
+          setUserId(user);
 
-          const personSensitive = await GetPersonSensitive(user);
-          setUserDataSensitive(personSensitive.data.message["0"]);
+          try {
+            const personProfile = await GetUserProfile(user);
+            setUserData(personProfile.data.message['0']);
 
-          const hasCaseTemp = await HasCase(user);
-          setHasCase(hasCaseTemp);
+            const personSensitive = await GetPersonSensitive(user);
+            setUserDataSensitive(personSensitive.data.message['0']);
 
-          const isCaseWorkerTemp = await IsCaseWorker(user);
-          setIsCaseWorker(isCaseWorkerTemp);
+            const hasCaseTemp = await HasCase(user);
+            setHasCase(hasCaseTemp);
 
-          const isSupervisorTemp = await IsSupervisor(user);
-          setIsManager(isSupervisorTemp);
+            const isCaseWorkerTemp = await IsCaseWorker(user);
+            setIsCaseWorker(isCaseWorkerTemp);
 
-          setIsLoaded(true);
+            const isSupervisorTemp = await IsSupervisor(user);
+            setIsManager(isSupervisorTemp);
+
+            setIsLoaded(true);
+          } catch (e) {
+            setErrorWhy(`Could not load user profile. Something has gone terribly wrong. 
+            Does this person actually exist?`)
+          }
         }
       }
     };
-    func();
+    void func();
   }, []);
 
   const handleChangeBasic = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserData((prevState: any) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -99,7 +109,7 @@ export default function BasicInformationDetails({
     const d = new Date(value).toISOString();
     setUserData((prevState: any) => ({
       ...prevState,
-      [name]: d,
+      [name]: d
     }));
   };
 
@@ -109,7 +119,7 @@ export default function BasicInformationDetails({
     const { name, value } = event.target;
     setUserDataSensitive((prevState: any) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -117,78 +127,88 @@ export default function BasicInformationDetails({
     if (changed) {
       const func = async () => {
         if (editMode) {
-          let res = await SetUserProfileAdd(userData);
+          const res = await SetUserProfileAdd(userData);
           if (editMode) {
-            const row_id = res["data"]["row_id"];
-            navigate(`/profile/${row_id}`);
+            const rowId = res.data.row_id;
+            navigate(`/profile/${rowId}`);
           }
         } else {
-          await SetUserProfile(userData);
-          await SetPersonSensitiveProfile(userDataSensitive);
+          try {
+            await SetUserProfile(userData);
+            await SetPersonSensitiveProfile(userDataSensitive);
+          } catch (e) {
+            alert('Error: Could not set user profile.')
+          }
         }
         setChanged(false);
       };
-      func();
+      void func();
     }
   }, [changed]);
 
+  if (errorWhy !== '') {
+    return <FiveZeroZero howToResolve={errorWhy} container={false} />
+  }
+
   return (
-    <Container className={`p-4 main-content shadow mt-4 mb-4`}>
+    <Container className={'p-4 main-content shadow mt-4 mb-4'}>
       <Container fluid>
         <Row>
           <Col>
-            <h1>Profile: {userData["preferred_name"]}</h1>
+            <h1>Profile: {userData.preferred_name }</h1>
             <h2>
-              Roles: {isManager ? "Manager, " : ""}
-              {isCaseWorker ? "Caseworker, " : ""} Person
+              Roles: {isManager ? 'Manager, ' : ''}
+              {isCaseWorker ? 'Caseworker, ' : ''} Person
             </h2>
           </Col>
-          <Col></Col>
+          <Col />
         </Row>
         <Row>
           <Col>
-            {!editMode ? (
-              <Button
-                className={`w-100 float-end ms-2 mx-1`}
-                onClick={() => {
-                  setSensitiveVisible(!sensitiveVisible);
-                }}
+            {!editMode
+              ? (
+                <Button
+                  className={'w-100 float-end ms-2 mx-1'}
+                  onClick={() => {
+                    setSensitiveVisible(!sensitiveVisible);
+                  }}
               >
-                ⚠️ View Sensitive Information
-              </Button>
-            ) : (
-              <></>
-            )}
+                  ⚠️ View Sensitive Information
+                </Button>
+                )
+              : (
+                <></>
+                )}
           </Col>
           {formEnabled ? (
             <>
-              {" "}
+              {' '}
               {!editMode ? (
                 <Col>
                   <Button
-                    variant="danger"
-                    className={`w-100 `}
+                    variant='danger'
+                    className={'w-100 '}
                     onClick={() => {
                       setFormEnabled(!formEnabled);
                       setUserData(userDataCopy);
                       setUserDataCopySensitive(userDataCopySensitive);
-                      //@ts-ignore
-                      $("#form")[0].reset();
-                      //@ts-ignore
 
-                      $("#form2")[0].reset();
+                      // @ts-expect-error JQuery nonsense
+                      $('#form')[0].reset();
+                      // @ts-expect-error More JQuery nonsense
+                      $('#form2')[0].reset();
                     }}
                   >
                     🗙 Cancel
-                  </Button>{" "}
+                  </Button>{' '}
                 </Col>
               ) : (
                 <></>
               )}
               <Col>
                 <Button
-                  variant="danger"
-                  className={`w-100`}
+                  variant='danger'
+                  className={'w-100'}
                   onClick={() => {
                     setFormEnabled(!formEnabled);
                     setChanged(true);
@@ -201,7 +221,7 @@ export default function BasicInformationDetails({
           ) : (
             <Col>
               <Button
-                className={`w-100`}
+                className={'w-100'}
                 onClick={() => {
                   setFormEnabled(!formEnabled);
                   setUserDataCopy(userData);
@@ -214,40 +234,50 @@ export default function BasicInformationDetails({
           )}
         </Row>
         <fieldset disabled={!formEnabled}>
-          <Form id="form">
+          <Form id='form'>
             <Row>
               <Col xs={12} s={12} md={4}>
-                <Form.Label column={true}>Preferred Name*</Form.Label>
+                <Form.Label column htmlFor='preferred_name'>Preferred Name* (max. 30 char)</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="preferred_name"
-                  placeholder="Preferred Name"
+                  id='preferred_name'
+                  type='text'
+                  name='preferred_name'
+                  placeholder='Preferred Name'
                   onChange={handleChangeBasic}
-                  defaultValue={userData["preferred_name"] || ""}
-                />
-              </Col>
-              <Col xs={12} s={12} md={4}>
-                <Form.Label column={true}>Full Name*</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="full_name"
-                  placeholder="Full Name"
-                  onChange={handleChangeBasic}
-                  defaultValue={userData["full_name"] || ""}
-                />
-              </Col>
-              <Col xs={12} s={12} md={4}>
-                <Form.Label column={true}>Phone Number</Form.Label>
-                <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">📞</InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    name="phone"
-                    placeholder="Phone Number"
-                    onChange={handleChangeBasic}
-                    defaultValue={userData["phone"] || ""}
+                  defaultValue={userData.preferred_name || ''}
+                  isInvalid={(userData['preferred_name'] != null) ? userData['preferred_name'].length > 30 : false}
+
                   />
-                  <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type='invalid'>
+                  Preferred name must be less than 30 characters.
+                </Form.Control.Feedback>
+              </Col>
+              <Col xs={12} s={12} md={4}>
+                <Form.Label column htmlFor='full_name'>Full Name*</Form.Label>
+                <Form.Control
+                  id='full_name'
+                  type='text'
+                  name='full_name'
+                  placeholder='Full Name'
+                  onChange={handleChangeBasic}
+                  defaultValue={userData.full_name || ''}
+                />
+              </Col>
+              <Col xs={12} s={12} md={4}>
+                <Form.Label htmlFor='phone' column>Phone Number</Form.Label>
+                <InputGroup hasValidation>
+                  <InputGroup.Text id='inputGroupPrepend'>📞</InputGroup.Text>
+                  <Form.Control
+                    id='phone'
+                    type='text'
+                    name='phone'
+                    placeholder='Phone Number'
+                    onChange={handleChangeBasic}
+                    defaultValue={userData.phone || ''}
+                    isInvalid={(userData['phone'] != null) ? !(userData['phone'].length >= 8 && userData['phone'].length <= 15) : false}
+
+                  />
+                  <Form.Control.Feedback type='invalid'>
                     Please put in a valid phone number.
                   </Form.Control.Feedback>
                 </InputGroup>
@@ -255,207 +285,252 @@ export default function BasicInformationDetails({
             </Row>
             <Row>
               <Col xs={12} s={12} md={4}>
-                <Form.Label column={true}>Address</Form.Label>
+                <br />
+                <p>Address</p>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">1</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>1</InputGroup.Text>
                   <Form.Control
-                    type="text"
-                    name="address_line_1"
-                    placeholder="Address Line 1"
+                    id='address_line_1'
+                    type='text'
+                    name='address_line_1'
+                    aria-label='Address Line 1'
+                    placeholder='Address Line 1'
                     onChange={handleChangeBasic}
-                    defaultValue={userData["address_1"] || ""}
+                    defaultValue={userData.address_1 || ''}
                   />
                 </InputGroup>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">2</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>2</InputGroup.Text>
                   <Form.Control
-                    type="text"
-                    name="address_line_2"
-                    placeholder="Address Line 2"
+                    id='address_line_2'
+                    type='text'
+                    name='address_line_2'
+                    aria-label='Address Line 2'
+
+                    placeholder='Address Line 2'
                     onChange={handleChangeBasic}
-                    defaultValue={userData["address_2"] || ""}
+                    defaultValue={userData.address_2 || ''}
                   />
                 </InputGroup>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">3</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>3</InputGroup.Text>
                   <Form.Control
-                    type="text"
-                    name="address_line_3"
-                    placeholder="Address Line 3"
+                    type='text'
+                    name='address_line_3'
+                    aria-label='Address Line 3'
+
+                    placeholder='Address Line 3'
                     onChange={handleChangeBasic}
-                    defaultValue={userData["address_3"] || ""}
+                    defaultValue={userData.address_3 || ''}
                   />
                 </InputGroup>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">City</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>City</InputGroup.Text>
                   <Form.Control
-                    type="text"
-                    name="city"
-                    placeholder="City"
+                    type='text'
+                    name='city'
+                    aria-label='City'
+
+                    placeholder='City'
                     onChange={handleChangeBasic}
-                    defaultValue={userData["city"] || ""}
+                    defaultValue={userData.city || ''}
                   />
                 </InputGroup>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">
+                  <InputGroup.Text id='inputGroupPrepend'>
                     Postcode
                   </InputGroup.Text>
 
                   <Form.Control
-                    type="text"
-                    name="postcode"
-                    placeholder="Postcode"
+                    type='text'
+                    aria-label='Postcode'
+                    name='postcode'
+                    placeholder='Postcode'
                     onChange={handleChangeBasic}
-                    defaultValue={userData["postcode"] || ""}
+                    defaultValue={userData.postcode || ''}
                   />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type='invalid'>
                     Please put in a valid postcode.
                   </Form.Control.Feedback>
                 </InputGroup>
               </Col>
 
               <Col xs={12} s={12} md={4}>
-                <Form.Label column={true}>Pronouns</Form.Label>
+                <Form.Label column htmlFor='pronouns'>Pronouns (max. 15 char)</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="pronouns"
-                  placeholder="Pronouns"
+                  type='text'
+                  id='pronouns'
+                  name='pronouns'
+                  placeholder='Pronouns'
                   onChange={handleChangeBasic}
-                  defaultValue={userData["pronouns"] || ""}
-                />
-                <Form.Label column={true}>First Language</Form.Label>
+                  defaultValue={userData.pronouns || ''}
+                  isInvalid={(userData['pronouns'] != null) ? !(userData['pronouns'].length < 15) : false}
+
+                  />
+                <Form.Control.Feedback type='invalid'>
+                  Pronouns longer than 15 characters.
+                </Form.Control.Feedback>
+                <Form.Label column htmlFor='first_language'>First Language</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="first_language"
-                  placeholder="First Language"
+                  type='text'
+                  id='first_language'
+                  name='first_language'
+                  placeholder='First Language'
                   onChange={handleChangeBasic}
-                  defaultValue={userData["first_language"] || ""}
+                  defaultValue={userData.first_language || ''}
                 />
               </Col>
 
               <Col xs={12} s={12} md={4}>
-                <Form.Label column={true}>Email Address</Form.Label>
+                <Form.Label column htmlFor='email_address'>Email Address</Form.Label>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>@</InputGroup.Text>
                   <Form.Control
-                    type="text"
-                    name="email"
-                    placeholder="Email address"
+                    type='tel'
+                    id='email_address'
+                    name='email'
+                    placeholder='Email address'
                     onChange={handleChangeBasic}
-                    defaultValue={userData["email"] || ""}
+                    defaultValue={userData.email || ''}
+                    isInvalid={(userData['email'] != null) ? !(userData['email'].includes('@')) : false}
+
                   />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type='invalid'>
                     Please put in a valid email address.
                   </Form.Control.Feedback>
                 </InputGroup>
-                <Form.Label column={true}>Date of Birth</Form.Label>
+                <Form.Label column htmlFor='date_of_birth'>Date of Birth</Form.Label>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">📅</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>📅</InputGroup.Text>
                   <Form.Control
-                    type="date"
-                    name="dob"
+                    type='date'
+                    id='date_of_birth'
+                    name='dob'
                     onChange={handleChangeDates}
-                    placeholder="Date of Birth"
-                    defaultValue="2023-04-14"
+                    placeholder='Date of Birth'
+                    defaultValue='2023-04-14'
                   />
                 </InputGroup>
               </Col>
             </Row>
             <Row>
               <Col xs={12} s={12} md={4}>
-                <span> </span>
+                <Form.Label column htmlFor='gender'>Gender (max. 15 char)</Form.Label>
+                <Form.Control
+                  type='text'
+                  id='gender'
+                  name='gender'
+                  placeholder='gender'
+                  onChange={handleChangeBasic}
+                  isInvalid={(userData['gender'] != null) ? !(userData['gender'].length < 15) : false}
+
+                  />
+                <Form.Control.Feedback type='invalid'>
+                  Gender longer than 15 characters.
+                </Form.Control.Feedback>
               </Col>
             </Row>
             <br />
 
             <Row>
-              {!editMode ? (
-                <>
-                  {isJWTSupervisor() && !hasCase ? (
-                    <>
-                      <Col>
-                        <Button
-                          variant="warning"
-                          onClick={() => {
-                            navigate(`/case/add/${user}`);
-                          }}
-                          className="w-100 float-end"
+              {!editMode
+                ? (
+                  <>
+                    {isJWTSupervisor() && !hasCase
+                      ? (
+                        <>
+                          <Col>
+                            <Button
+                              variant='warning'
+                              onClick={() => {
+                                console.log(userId);
+                                navigate(`/case/add/${userId}`);
+                              }}
+                              className='w-100 float-end'
                         >
-                          🔒 Add Case for Profile
-                        </Button>
-                      </Col>
-                    </>
-                  ) : (
-                    <></>
+                              🔒 Add Case for Profile
+                            </Button>
+                          </Col>
+                        </>
+                        )
+                      : (
+                        <></>
+                        )}
+
+                    {isJWTSupervisor()
+                      ? (
+                        <Col>
+                          <Button
+                            variant='warning'
+                            onClick={() => {
+                              setNukeModalShow(true);
+                            }}
+                            className='w-100 float-end'
+                      >
+                            ☢️ Nuke
+                          </Button>
+                        </Col>
+                        )
+                      : (
+                        <></>
+                        )}
+                  </>
+                  )
+                : (
+                  <></>
                   )}
 
-                  {isJWTSupervisor() ? (
+              {!editMode && isJWTSupervisor()
+                ? (
+                  <>
                     <Col>
                       <Button
-                        variant="warning"
-                        onClick={() => {
-                          setNukeModalShow(true);
+                        variant='warning'
+                        className={'w-100 float-end'}
+                        onClick={async () => {
+                          if (isCaseWorker) {
+                            await CaseWorkerPerms(user, false);
+                            setIsCaseWorker(false);
+                          } else {
+                            await CaseWorkerPerms(user, true);
+                            setIsManager(true);
+                          }
                         }}
-                        className="w-100 float-end"
-                      >
-                        ☢️ Nuke
+                    >
+                        🔒 {isCaseWorker ? 'Remove' : 'Set'} as Case Worker{' '}
                       </Button>
                     </Col>
-                  ) : (
-                    <></>
+                  </>
+                  )
+                : (
+                  <></>
                   )}
-                </>
-              ) : (
-                <></>
-              )}
 
-              {!editMode && isJWTSupervisor() ? (
-                <>
-                  <Col>
-                    <Button
-                      variant="warning"
-                      className={`w-100 float-end`}
-                      onClick={async () => {
-                        if (isCaseWorker) {
-                          await CaseWorkerPerms(user, false);
-                          setIsCaseWorker(false);
-                        } else {
-                          await CaseWorkerPerms(user, true);
-                          setIsManager(true);
-                        }
-                      }}
+              {!editMode && isJWTSupervisor()
+                ? (
+                  <>
+                    <Col>
+                      <Button
+                        variant='warning'
+                        className={'w-100 float-end'}
+                        onClick={async () => {
+                          if (isManager) {
+                            await SupervisorPerms(user, false);
+                            setIsManager(false);
+                          } else {
+                            await SupervisorPerms(user, true);
+                            setIsManager(true);
+                          }
+                        }}
                     >
-                      🔒 {isCaseWorker ? "Remove" : "Set"} as Case Worker{" "}
-                    </Button>
-                  </Col>
-                </>
-              ) : (
-                <></>
-              )}
-
-              {!editMode && isJWTSupervisor() ? (
-                <>
-                  <Col>
-                    <Button
-                      variant="warning"
-                      className={`w-100 float-end`}
-                      onClick={async () => {
-                        if (isManager) {
-                          await SupervisorPerms(user, false);
-                          setIsManager(false);
-                        } else {
-                          await SupervisorPerms(user, true);
-                          setIsManager(true);
-                        }
-                      }}
-                    >
-                      🔒 {isManager ? "Remove" : "Set"} as Manager{" "}
-                    </Button>
-                  </Col>
-                </>
-              ) : (
-                <></>
-              )}
+                        🔒 {isManager ? 'Remove' : 'Set'} as Manager{' '}
+                      </Button>
+                    </Col>
+                  </>
+                  )
+                : (
+                  <></>
+                  )}
             </Row>
 
             <Modal show={nukeModalShow} onHide={handleClose} animation={false}>
@@ -470,15 +545,15 @@ export default function BasicInformationDetails({
               </Modal.Body>
               <Modal.Footer>
                 <Button
-                  variant="danger"
+                  variant='danger'
                   onClick={async () => {
                     await RemovePerson(user);
-                    navigate("/");
+                    navigate('/');
                   }}
                 >
                   DELETE
                 </Button>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button variant='secondary' onClick={handleClose}>
                   CANCEL
                 </Button>
               </Modal.Footer>
@@ -488,106 +563,96 @@ export default function BasicInformationDetails({
         <br />
         <Row>
           <Col>
-            {sensitiveVisible ? (
-              <>
-                <fieldset disabled={!formEnabled} className="mt-5">
-                  <Form id="form2">
-                    <Row>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>Nationality</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="nationality"
-                          placeholder="Nationality"
-                          onChange={handleChangeSensitive}
-                          defaultValue={userDataSensitive["nationality"] || ""}
+            {sensitiveVisible
+              ? (
+                <>
+                  <fieldset disabled={!formEnabled} className='mt-5'>
+                    <Form id='form2'>
+                      <Row>
+                        <Col xs={12} s={12} md={4}>
+                          <Form.Label column htmlFor='nationality'>Nationality</Form.Label>
+                          <Form.Control
+                            id='nationality'
+                            type='text'
+                            name='nationality'
+                            placeholder='Nationality'
+                            onChange={handleChangeSensitive}
+                            defaultValue={userDataSensitive.nationality || ''}
                         />
-                      </Col>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>Religion</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="religion"
-                          placeholder="Religion"
-                          onChange={handleChangeSensitive}
-                          defaultValue={userDataSensitive["religion"] || ""}
+                        </Col>
+                        <Col xs={12} s={12} md={4}>
+                          <Form.Label column htmlFor='religion'>Religion</Form.Label>
+                          <Form.Control
+                            id='religion'
+                            type='text'
+                            name='religion'
+                            placeholder='Religion'
+                            onChange={handleChangeSensitive}
+                            defaultValue={userDataSensitive.religion || ''}
                         />
-                      </Col>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>
-                          Sexual Orientation
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="sexual_orientation"
-                          placeholder="Sexual Orientation"
-                          onChange={handleChangeSensitive}
-                          defaultValue={
-                            userDataSensitive["sexual_orientation"] || ""
+                        </Col>
+                        <Col xs={12} s={12} md={4}>
+                          <Form.Label column htmlFor='sex_or'>
+                            Sexual Orientation
+                          </Form.Label>
+                          <Form.Control
+                            id='sex_or'
+                            type='text'
+                            name='sexual_orientation'
+                            placeholder='Sexual Orientation'
+                            onChange={handleChangeSensitive}
+                            defaultValue={
+                            userDataSensitive.sexual_orientation || ''
                           }
                         />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>Sex</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="sex"
-                          placeholder="Sex"
-                          onChange={handleChangeSensitive}
-                          defaultValue={userDataSensitive["sex"] || ""}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col xs={12} s={12} md={4}>
+                          <Form.Label column htmlFor='sex'>Sex</Form.Label>
+                          <Form.Control
+                            id='sex'
+                            type='text'
+                            name='sex'
+                            placeholder='Sex'
+                            onChange={handleChangeSensitive}
+                            defaultValue={userDataSensitive.sex || ''}
                         />
-                      </Col>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>Ethnicity</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="ethnicity"
-                          placeholder="Ethnicity"
-                          onChange={handleChangeSensitive}
-                          defaultValue={userDataSensitive["ethnicity"] || ""}
+                        </Col>
+                        <Col xs={12} s={12} md={4}>
+                          <Form.Label htmlFor='eth' column>Ethnicity</Form.Label>
+                          <Form.Control
+                            id='eth'
+                            type='text'
+                            name='ethnicity'
+                            placeholder='Ethnicity'
+                            onChange={handleChangeSensitive}
+                            defaultValue={userDataSensitive.ethnicity || ''}
                         />
-                      </Col>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>
-                          Immigration Status
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="immigration_status"
-                          placeholder="Immigration Status"
-                          onChange={handleChangeSensitive}
-                          defaultValue={
-                            userDataSensitive["immigration_status"] || ""
+                        </Col>
+                        <Col xs={12} s={12} md={4}>
+                          <Form.Label column htmlFor='im_stat'>
+                            Immigration Status
+                          </Form.Label>
+                          <Form.Control
+                            id='im_stat'
+                            type='text'
+                            name='immigration_status'
+                            placeholder='Immigration Status'
+                            onChange={handleChangeSensitive}
+                            defaultValue={
+                            userDataSensitive.immigration_status || ''
                           }
                         />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={12} s={12} md={4}>
-                        <Form.Label column={true}>
-                          Sexual Orientation
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="sexual_orientation"
-                          placeholder="Sexual Orientation"
-                          onChange={handleChangeSensitive}
-                          defaultValue={
-                            userDataSensitive["sexual_orientation"] || ""
-                          }
-                        />
-                      </Col>
-                      <Col xs={12} s={12} md={4}></Col>
-                      <Col xs={12} s={12} md={4}></Col>
-                    </Row>
-                  </Form>
-                </fieldset>
-              </>
-            ) : (
-              <></>
-            )}
+                        </Col>
+                      </Row>
+                    </Form>
+                  </fieldset>
+                </>
+                )
+              : (
+                <></>
+                )}
           </Col>
         </Row>
       </Container>

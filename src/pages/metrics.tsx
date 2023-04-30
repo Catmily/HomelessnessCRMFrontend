@@ -1,77 +1,66 @@
 import {
   Container,
-  Dropdown,
-  Form,
   Row,
-  Col,
-  Button,
-  Card,
-} from "react-bootstrap";
-import StandardLayout from "../layouts/standardLayout";
-import Table from "react-bootstrap/Table";
-import { useEffect, useState } from "react";
+  Col
+} from 'react-bootstrap';
+import StandardLayout from '../layouts/standardLayout';
+import { type ReactElement, useEffect, useState } from 'react';
 import {
   GetCasesGeneric,
-  GetDocumentsGeneric,
-  GetKeysDB,
-  GetNotesGeneric,
   GetPeopleGeneric,
-  GetStats,
-} from "../glue/DBConnector";
-import {
-  caseFieldType,
-  documentType,
-  noteType,
-  personFieldType,
-} from "../glue/typeTranslation";
+  GetStats
+} from '../glue/DBConnector';
 import {
   BarChart,
   Bar,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
-} from "recharts";
-export default function Metrics() {
+  ResponsiveContainer
+} from 'recharts';
+export default function Metrics (): ReactElement<any, any> {
   const [cases, setCases] = useState();
   const [casesEachDay, setCasesEachDay] = useState();
 
-  const [people, setPeople] = useState();
+  const [people, setPeople] = useState<any>();
   const [peopleEachDay, setPeopleEachDay] = useState();
 
   const [dataLoaded, setDataLoaded] = useState(false);
   const [stats, setStats] = useState(false);
 
   useEffect(() => {
-    if (!dataLoaded) {
-      const func = async () => {
-        let d1 = await GetCasesGeneric({});
-        setCases(d1["data"]["message"]);
+    try {
+      if (!dataLoaded) {
+        const func = async (): Promise<void> => {
+          const caseTemp = await GetCasesGeneric({});
+          setCases(caseTemp['data']['message']);
 
-        let d2 = await GetPeopleGeneric({});
-        setPeople(d2["data"]["message"]);
+          const peopleTemp = await GetPeopleGeneric({});
+          setPeople(peopleTemp['data']['message']);
 
-        let d3 = await GetStats();
-        setStats(d3["data"]["message"]);
-        setDataLoaded(true);
-      };
-      func();
+          const statTemp = await GetStats();
+          setStats(statTemp['data']['message']);
+          setDataLoaded(true);
+        };
+        void func();
+      }
+    } catch {
+      alert('Unable to load metrics. Speak to your system administrator.')
     }
   }, []);
 
-  function perDay(dataset: object, field: string, scale: Number) {
-    const timestamps_raw = [];
+  function perDay (dataset: object, field: string, scale: number): Record<string, any> {
+    const timestampsRaw = [];
 
-    //@ts-ignore
-    dataset.forEach((obj) => {
-      timestamps_raw.push(obj[field]);
+    // @ts-expect-error But you can iterate like this
+    dataset.forEach((obj: Record<string, any>) => {
+      timestampsRaw.push(obj[field]);
     });
 
-    let cases_timestamped = [];
-    timestamps_raw.forEach((timestamp) => {
+    const casesTimestamped = [];
+    timestampsRaw.forEach((timestamp) => {
       let date;
       try {
         switch (scale) {
@@ -87,18 +76,21 @@ export default function Metrics() {
             break;
         }
 
-        if (!cases_timestamped[date]) {
-          cases_timestamped[date] = 0;
+        if (!casesTimestamped[date]) {
+          casesTimestamped[date] = 0;
         }
-        cases_timestamped[date] += 1;
+
+        // wtf?
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        casesTimestamped[date] += 1;
       } catch (e) {}
     });
-    let data = [];
+    const data = []
 
-    Object.entries(cases_timestamped).forEach(([date, amount]) => {
+    Object.entries(casesTimestamped).forEach(([date, amount]) => {
       const outputObj = {
-        date: date,
-        amount: amount,
+        date,
+        amount
       };
       data.push(outputObj);
     });
@@ -111,27 +103,32 @@ export default function Metrics() {
 
   useEffect(() => {
     if (cases) {
-      //@ts-ignore
-      setCasesEachDay(perDay(cases, "start_date", "1"));
+      // @ts-expect-error Mixing fetched types
+      setCasesEachDay(perDay(cases, 'start_date', '1'));
     }
   }, [cases]);
 
   useEffect(() => {
+    const pplChanged = [];
     if (people) {
-      //@ts-ignore
-      setPeopleEachDay(perDay(people, "dob", 3));
+      people.forEach(element => {
+        pplChanged.push(element[1]);
+      })
+
+      // @ts-expect-error Mixing fetched types
+      setPeopleEachDay(perDay(pplChanged, 'dob', 3));
     }
   }, [people]);
 
   return (
     <StandardLayout
       content={
-        <Container className={`p-4 main-content shadow mt-4 mb-4`}>
+        <Container className={'p-4 main-content shadow mt-4 mb-4'}>
           <h1>Metrics</h1>
           <Row>
             <Col>
               <h2>New Cases Per Day</h2>
-              <ResponsiveContainer width="95%" height={300}>
+              <ResponsiveContainer width='95%' height={300}>
                 <BarChart
                   width={500}
                   height={300}
@@ -140,21 +137,21 @@ export default function Metrics() {
                     top: 5,
                     right: 30,
                     left: 20,
-                    bottom: 5,
+                    bottom: 5
                   }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
+                  <CartesianGrid strokeDasharray='3 3' />
+                  <XAxis dataKey='date' />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="amount" fill="#8884d8" />
+                  <Bar dataKey='amount' fill='#4444d8' />
                 </BarChart>
               </ResponsiveContainer>
             </Col>
             <Col>
               <h2>Demographics, Year of Birth</h2>
-              <ResponsiveContainer width="95%" height={300}>
+              <ResponsiveContainer width='95%' height={300}>
                 <BarChart
                   width={500}
                   height={300}
@@ -163,28 +160,28 @@ export default function Metrics() {
                     top: 5,
                     right: 30,
                     left: 20,
-                    bottom: 5,
+                    bottom: 5
                   }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
+                  <CartesianGrid strokeDasharray='3 3' />
+                  <XAxis dataKey='date' />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="amount" fill="#8884d8" />
+                  <Bar dataKey='amount' fill='#4444d8' />
                 </BarChart>
               </ResponsiveContainer>
             </Col>
           </Row>
           <h2>System Stats</h2>
           <h3>
-            Disk Free (GB): <span>{stats["disk_free_gb"]} GB left</span>
+            Disk Free (GB): <span>{stats['disk_free_gb']} GB left</span>
           </h3>
           <h3>
-            CPU Use: <span>{stats["cpu_use"]}%</span>
+            CPU Use: <span>{stats['cpu_use']}%</span>
           </h3>
           <h3>
-            RAM Use: <span>{stats["ram_use"]}%</span>
+            RAM Use: <span>{stats['ram_use']}%</span>
           </h3>
         </Container>
       }

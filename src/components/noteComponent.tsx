@@ -1,70 +1,75 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Row } from "react-bootstrap";
-import StandardLayout from "../layouts/standardLayout";
-import SimpleMdeReact from "react-simplemde-editor";
-import { Options } from "easymde";
-import "easymde/dist/easymde.min.css";
-import { getPersonId } from "../glue/Auth";
-import { useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Col, Dropdown, Form, Row } from 'react-bootstrap';
+import SimpleMdeReact from 'react-simplemde-editor';
+import { type Options } from 'easymde';
+import 'easymde/dist/easymde.min.css';
+import { getPersonId } from '../glue/Auth';
+import { useParams } from 'react-router-dom';
 import {
   AddNote,
   AddSafeguardingNote,
-  GetUserProfile,
-} from "../glue/DBConnector";
-import SearchPerson from "./searchFunction";
+  GetUserProfile
+} from '../glue/DBConnector';
+// import SearchPerson from './searchFunction';
 
-type Props = {
-  safeguarding: boolean;
-};
+interface Props {
+  safeguarding: boolean
+}
 
 export const NoteComponent = ({ safeguarding }: Props) => {
-  const [note, setNote] = useState("");
-  const [action, setAction] = useState("");
+  const [note, setNote] = useState('');
+  const [action, setAction] = useState('');
   const [person, setPerson] = useState(Object);
-  const [date, setDate] = useState("");
-  const [title, setTitle] = useState("");
+  const [date, setDate] = useState('');
+  const [involved, setInvolved] = useState('');
+
+  const [title, setTitle] = useState('');
   const [priority, setPriority] = useState(Number);
-  const [priorityDesc, setPriorityDesc] = useState("Select Priority");
+  const [priorityDesc, setPriorityDesc] = useState('Select Priority');
 
   let [changed, setChanged] = useState(false);
 
-  let { id } = useParams();
+  const { id } = useParams();
   useEffect(() => {
     const func = async () => {
-      //@ts-ignore
       const res = await GetUserProfile(id);
-      //@ts-ignore
 
-      setPerson(res["data"]["message"]["0"]);
+      setPerson(res['data']['message']['0']);
     };
-    func();
+    void func();
   }, []);
 
   useEffect(() => {
-    const func = async () => {
-      const case_worker_id = getPersonId();
-      const res = await AddNote({
-        person_id: id,
-        case_worker_id: case_worker_id,
-        note: note,
-        title: title,
-        actions_to_take: action,
-        actions_taken: "",
-        note_date: new Date().toISOString(),
-        incident_date: date,
-        priority: priority,
-      });
+    const func = async (): Promise<void> => {
+      if (changed) {
+        try {
+          const caseWorkerId = getPersonId();
+          const res = await AddNote({
+            person_id: id,
+            caseWorkerId,
+            note,
+            title,
+            involved,
+            actions_to_take: action,
+            actions_taken: '',
+            note_date: new Date().toISOString(),
+            incident_date: date,
+            priority
+          });
 
-      if (safeguarding) {
-        AddSafeguardingNote({
-          //@ts-ignore
-          note_id: res["data"]["row_id"],
-          person_id: id,
-        });
+          if (safeguarding) {
+            await AddSafeguardingNote({
+              note_id: res['data']['row_id'],
+              person_id: id
+            });
+          }
+        } catch (e) {
+          alert('Error: Your note could not be submitted.')
+        }
       }
     };
     if (setChanged) {
-      func();
+      void func();
       changed = false;
     }
   }, [changed]);
@@ -74,18 +79,23 @@ export const NoteComponent = ({ safeguarding }: Props) => {
       autofocus: true,
       spellChecker: true,
       lineNumbers: true,
-      placeholder: "Type your note here",
-    } as Options;
+      placeholder: 'Type your note here'
+    } satisfies Options;
   }, []);
 
   const onChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setDate(new Date(value).toISOString());
   };
 
   const onChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setTitle(value);
+  };
+
+  const onChangeInvolved = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setInvolved(value);
   };
 
   const onChangeNote = useCallback((value: string) => {
@@ -96,20 +106,20 @@ export const NoteComponent = ({ safeguarding }: Props) => {
     setAction(value);
   }, []);
 
-  function changePriority(priority: number) {
+  function changePriority (priority: number) {
     setPriorityDesc(`Priority: ${priority}`);
     setPriority(priority);
   }
 
-  function addNote() {
+  function addNote () {
     setChanged(true);
   }
 
   return (
-    <Form className="my-4">
+    <Form className='my-4'>
       <Col>
-        <h2>User: {person["preferred_name"]}</h2>
-        <Button className="" href={`/profile/${person["person_id"]}`}>
+        <h2>User: {person['preferred_name']}</h2>
+        <Button className='' href={`/profile/${person['person_id']}`}>
           Return to Client
         </Button>
         <br />
@@ -117,22 +127,23 @@ export const NoteComponent = ({ safeguarding }: Props) => {
 
         <h2>Title</h2>
         <Form.Control
-          type="text"
+          type='text'
+          aria-label='Title'
           maxLength={50}
-          placeholder="Enter the title..."
+          placeholder='Enter the title...'
           onChange={onChangeTitle}
         />
         <br />
-        <h2>Information:</h2>
+        <h2 >Information:</h2>
         <SimpleMdeReact
+          aria-label='Information - Textbox'
           onChange={onChangeNote}
           value={note}
           options={options}
         />
-
         <h2>Actions to take:</h2>
-
         <SimpleMdeReact
+          aria-label='Actions - Textbox'
           onChange={onChangeAction}
           value={action}
           options={options}
@@ -140,32 +151,39 @@ export const NoteComponent = ({ safeguarding }: Props) => {
       </Col>
       <Row>
         <Col>
-          <Form.Label column={true}>Date:</Form.Label>
+          <Form.Label htmlFor='date' column>Date:</Form.Label>
           <Form.Control
-            type="date"
+            id='date'
+            type='date'
+            aria-label='Date'
             onChange={onChangeDate}
-            placeholder="Start Date"
+            placeholder='Start Date'
           />
         </Col>
         <Col>
-          <Form.Label column={true}>People involved:</Form.Label>
-          <SearchPerson staffOnly={false} />
+          <Form.Label column htmlFor='involved'>People involved:</Form.Label>
+          <Form.Control
+            id='involved'
+            onChange={onChangeInvolved}
+            type='text'
+            placeholder='Who was involved?'
+            />
         </Col>
         <Col>
-          <Form.Label column={true}>Urgency:</Form.Label>
+          <Form.Label column htmlFor='dropdown-basic' aria-label='Urgency dropdown'>Urgency:</Form.Label>
           <Dropdown>
             <Dropdown.Toggle
-              variant="success"
-              className="w-100"
-              id="dropdown-basic"
+              variant='success'
+              className='w-100'
+              id='dropdown-basic'
             >
               {priorityDesc}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
               <Dropdown.Item
-                className="bold"
-                name="priority_0"
+                className='bold'
+                name='priority_0'
                 onClick={() => {
                   changePriority(0);
                 }}
@@ -173,8 +191,8 @@ export const NoteComponent = ({ safeguarding }: Props) => {
                 Life at Risk (0)
               </Dropdown.Item>
               <Dropdown.Item
-                className="bold"
-                name="priority_1"
+                className='bold'
+                name='priority_1'
                 onClick={() => {
                   changePriority(1);
                 }}
@@ -182,8 +200,8 @@ export const NoteComponent = ({ safeguarding }: Props) => {
                 Urgent (1)
               </Dropdown.Item>
               <Dropdown.Item
-                className="bold"
-                name="priority_2"
+                className='bold'
+                name='priority_2'
                 onClick={() => {
                   changePriority(2);
                 }}
@@ -191,7 +209,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
                 High (2)
               </Dropdown.Item>
               <Dropdown.Item
-                name="priority_3"
+                name='priority_3'
                 onClick={() => {
                   changePriority(3);
                 }}
@@ -199,7 +217,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
                 Medium (3)
               </Dropdown.Item>
               <Dropdown.Item
-                name="priority_4"
+                name='priority_4'
                 onClick={() => {
                   changePriority(4);
                 }}
@@ -214,7 +232,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
 
       <Row>
         <Col>
-          <Button size="lg" variant="danger" onClick={() => addNote()}>
+          <Button size='lg' variant='danger' onClick={() => { addNote(); }}>
             📥 Submit Form
           </Button>
         </Col>

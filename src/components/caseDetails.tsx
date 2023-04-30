@@ -1,4 +1,5 @@
-import { ReactElement, useEffect, useState } from "react";
+/* eslint-disable multiline-ternary */
+import { type ReactElement, useEffect, useState } from 'react';
 import {
   Form,
   Row,
@@ -8,13 +9,12 @@ import {
   Tab,
   Card,
   Nav,
-  Dropdown,
-  Modal,
-} from "react-bootstrap";
+  Dropdown
+} from 'react-bootstrap';
 import PaginationWrapper, {
-  OnChangeEventType,
-} from "@vlsergey/react-bootstrap-pagination";
-import * as $ from "jquery";
+  type OnChangeEventType
+} from '@vlsergey/react-bootstrap-pagination';
+import * as $ from 'jquery';
 import {
   ChangeCase,
   GetPersonNotes,
@@ -24,62 +24,62 @@ import {
   GetSafeguardingNotes,
   RemoveNote,
   RemoveDoc,
-} from "../glue/DBConnector";
-import { redirect, useNavigate } from "react-router-dom";
-import { getPersonId, isJWTSupervisor } from "../glue/Auth";
-import { caseFieldType } from "../glue/typeTranslation";
+  RemoveSafeguardingNote
+} from '../glue/DBConnector';
+import { useNavigate } from 'react-router-dom';
+import { getPersonId, isJWTSupervisor } from '../glue/Auth';
+import { caseFieldType } from '../glue/typeTranslation';
+import { FiveZeroZero } from '../pages/500';
 
-type Props = {
-  caseDetails: any;
-  editMode: boolean;
-};
+interface Props {
+  caseDetails: any
+  editMode: boolean
+}
 
-type NoteProps = {
-  caseDetails: any;
-  safeguarding: boolean;
-};
+interface NoteProps {
+  caseDetails: any
+  safeguarding: boolean
+}
 
-export function CaseDetails({ caseDetails, editMode = false }: Props) {
+export function CaseDetails ({ caseDetails, editMode = false }: Props): ReactElement<any, any> {
   const [caseObject, setCaseObject] = useState<any>();
   const [newCaseObject, setNewCaseObject] = useState<any>();
-  const [fields, setFields] = useState<JSX.Element[]>([]);
-  const [newFields, setNewFields] = useState<JSX.Element[]>([]);
-
+  const [fields, setFields] = useState<any>([]);
+  const [newFields, setNewFields] = useState<any>([]);
   const [changed, setChanged] = useState<boolean>(false);
   const [formEnabled, setFormEnabled] = useState<boolean>(editMode);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const func = async () => {
+    const func = async (): Promise<void> => {
       setCaseObject(caseDetails);
     };
-    func();
+    void func();
   }, []);
 
-  const addFields = (event: React.MouseEvent<HTMLElement>) => {
+  const addFields = (event: React.MouseEvent<HTMLElement>): void => {
     const name = (event.target as HTMLInputElement).name;
     const value = (event.target as HTMLInputElement).value;
 
-    //@ts-ignore
     setNewFields([
       ...newFields,
       <>
-        <Form.Label column={true}>
+        <Form.Label column>
           {
             caseFieldType[
-              name.replace("_dropdown", "") as keyof typeof caseFieldType
+              name.replace('_dropdown', '') as keyof typeof caseFieldType
             ]
           }
         </Form.Label>
         <Form.Control
-          as="textarea"
-          name={name.replace("_dropdown", "")}
+          as='textarea'
+          name={name.replace('_dropdown', '')}
           onChange={handleChange}
           rows={3}
-          defaultValue={value as string}
+          defaultValue={value}
         />
-      </>,
+      </>
     ]);
   };
 
@@ -88,67 +88,73 @@ export function CaseDetails({ caseDetails, editMode = false }: Props) {
 
     setNewCaseObject((prevState: any) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
   useEffect(() => {
     if (changed) {
       const func = async () => {
-        const res = await ChangeCase(newCaseObject);
-        setCaseObject(newCaseObject);
-        setChanged(false);
-        //@ts-ignore
-        setFields([...fields, newFields]);
-        setNewFields([]);
+        try {
+          const res = await ChangeCase(newCaseObject);
 
-        if (editMode) {
-          const row_id = res["data"]["row_id"];
-          navigate(`/case/${row_id}`);
+          setCaseObject(newCaseObject);
+          setChanged(false);
+          setFields([...fields, newFields]);
+          setNewFields([]);
+          if (editMode) {
+            const rowId = res['data']['row_id'];
+            navigate(`/case/${rowId}`);
+          }
+        } catch (e) {
+          alert('Error: Could not save your changes to the case.')
         }
       };
-      func();
+      void func();
     }
   }, [changed]);
 
   useEffect(() => {
     const func = async () => {
-      if (caseObject != undefined) {
+      if (caseObject !== undefined) {
         if (editMode) {
           setNewCaseObject(caseObject);
         }
 
-        //@ts-ignore
         setFields(
           Object.entries(caseDetails).map(([key, value]) =>
-            //@ts-ignore
-            caseFieldType[key] ? (
-              value ? (
-                <>
-                  <Form.Label column={true}>
-                    {caseFieldType[key as keyof typeof caseFieldType]}
-                  </Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    onChange={handleChange}
-                    rows={3}
-                    defaultValue={value as string}
+            caseFieldType[key]
+              ? (
+                  value
+                    ? (
+                      <>
+                        <Form.Label column htmlFor={caseFieldType[key as keyof typeof caseFieldType]}>
+                          {caseFieldType[key as keyof typeof caseFieldType]}
+                        </Form.Label>
+                        <Form.Control
+                          id={caseFieldType[key as keyof typeof caseFieldType]}
+                          as='textarea'
+                          onChange={handleChange}
+                          rows={3}
+                          defaultValue={value as string}
                   />
-                </>
-              ) : (
+                      </>
+                      )
+                    : (
+                      <></>
+                      )
+                )
+              : (
                 <></>
-              )
-            ) : (
-              <></>
-            )
+                )
           )
         );
       }
     };
-    func();
+    void func();
   }, [caseObject]);
 
-  function filterDropdown(item: any) {
+  function filterDropdown (item: any) {
     if (caseObject) {
       if (caseObject[item[0]]) {
         return false;
@@ -158,41 +164,41 @@ export function CaseDetails({ caseDetails, editMode = false }: Props) {
   }
 
   return (
-    <Container className=" p-4">
+    <Container className=' p-4'>
       <fieldset disabled={!formEnabled}>
-        <Form id="case">
+        <Form id='case'>
           {fields}
           {newFields}
 
-          <p className="align-right">Last updated: 12/03/2023 14:12 by ABC</p>
+          <p className='align-right'>Last updated: 12/03/2023 14:12</p>
         </Form>
       </fieldset>
       <Row>
         <Col>
           {formEnabled ? (
             <>
-              {" "}
+              {' '}
               {!editMode ? (
                 <Button
-                  variant="danger"
-                  className={`float-end mx-0`}
+                  variant='danger'
+                  className={'float-end mx-0'}
                   onClick={() => {
                     setFormEnabled(!formEnabled);
-                    //@ts-ignore
-                    $("#case")[0].reset();
+                    // @ts-expect-error JQuery
+                    $('#case')[0].reset();
                     setNewFields([]);
                   }}
                 >
                   🗙 Cancel
                 </Button>
               ) : (
-                ""
+                ''
               )}
               <Dropdown>
                 <Dropdown.Toggle
-                  variant="success"
-                  className="float-end mx-1 me-2"
-                  id="dropdown-basic"
+                  variant='success'
+                  className='float-end mx-1 me-2'
+                  id='dropdown-basic'
                 >
                   📄 Add Field
                 </Dropdown.Toggle>
@@ -201,10 +207,10 @@ export function CaseDetails({ caseDetails, editMode = false }: Props) {
                   {Object.entries(caseFieldType)
                     .filter(filterDropdown)
                     .map(([key, value]) => (
-                      //@ts-ignore
+                      // eslint-disable-next-line react/jsx-key
                       <Dropdown.Item
                         onClick={addFields}
-                        name={key + "_dropdown"}
+                        name={key + '_dropdown'}
                       >
                         {value} {}
                       </Dropdown.Item>
@@ -212,8 +218,8 @@ export function CaseDetails({ caseDetails, editMode = false }: Props) {
                 </Dropdown.Menu>
               </Dropdown>
               <Button
-                variant="danger"
-                className={`float-end mx-1`}
+                variant='danger'
+                className={'float-end mx-1'}
                 onClick={() => {
                   setFormEnabled(!formEnabled);
 
@@ -225,7 +231,7 @@ export function CaseDetails({ caseDetails, editMode = false }: Props) {
             </>
           ) : (
             <Button
-              className={`float-end`}
+              className={'float-end'}
               onClick={() => {
                 setFormEnabled(!formEnabled);
                 setNewCaseObject(caseObject);
@@ -240,11 +246,12 @@ export function CaseDetails({ caseDetails, editMode = false }: Props) {
   );
 }
 
-export function DocumentList({ caseDetails }: Props) {
-  const [filePath, setFilePath] = useState("");
+export function DocumentList ({ caseDetails }: Props) {
+  const [filePath, setFilePath] = useState('');
   const [file, setFile] = useState();
 
-  const [documents, setDocuments] = useState<Object>();
+  const [documents, setDocuments] = useState<unknown>();
+  const [errorWhy, setErrorWhy] = useState('');
 
   const [pages, setPages] = useState<JSX.Element[]>([]);
   const [currentPageElements, setCurrentPageElements] = useState<JSX.Element[]>(
@@ -253,35 +260,39 @@ export function DocumentList({ caseDetails }: Props) {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
   const [changed, setChanged] = useState<boolean>(false);
 
-  async function getDocuments() {
-    let doc_response = await GetDocuments(caseDetails["person_id"]);
-    setDocuments(doc_response["data"]["message"]);
+  async function getDocuments (): Promise<void> {
+    const docResponse = await GetDocuments(caseDetails['person_id']);
+    setDocuments(docResponse['data']['message']);
   }
 
   useEffect(() => {
-    getDocuments();
+    void getDocuments();
   }, []);
 
   useEffect(() => {
     if (changed) {
       const func = async () => {
-        let doc_response = await GetDocuments(caseDetails["person_id"]);
-        setDocuments(doc_response["data"]["message"]);
-        setChanged(false);
+        try {
+          const docs = await getDocuments();
+          setDocuments(docs)
+          setChanged(false);
+        } catch (e) {
+          setErrorWhy('Could not retrieve the case documents. Unsure why.')
+        }
       };
-      func();
+      void func();
     }
   }, [changed]);
 
   useEffect(() => {
     if (documents) {
-      let pages: JSX.Element[] = [];
-      let entries = Object.entries(documents);
+      const pages: JSX.Element[] = [];
+      const entries = Object.entries(documents);
 
       for (let i = 0; i < entries.length; i++) {
         pages.push(
-          <Card className="fileCard">
-            <Container className="p-3">
+          <Card className='fileCard'>
+            <Container className='p-3'>
               <h2>Title: {entries[i][1].title}</h2>
               <h3>Description: {entries[i][1].description}</h3>
               <p>Filename: {entries[i][1].filename}</p>
@@ -294,10 +305,10 @@ export function DocumentList({ caseDetails }: Props) {
                       await GetDocument(entries[i][1].document_id);
                     }}
                   >
-                    👀 View{" "}
+                    👀 View{' '}
                   </Button>
                   <Button
-                    className="mx-2"
+                    className='mx-2'
                     onClick={async () => {
                       await RemoveDoc(entries[i][1].document_id);
                       await getDocuments();
@@ -321,8 +332,8 @@ export function DocumentList({ caseDetails }: Props) {
     SetCurrentPage();
   }, [pages]);
 
-  function handlePagination(e: OnChangeEventType) {
-    const { name, value } = e.target;
+  function handlePagination (e: OnChangeEventType) {
+    const { value } = e.target;
 
     setCurrentPageNumber(value);
   }
@@ -331,8 +342,8 @@ export function DocumentList({ caseDetails }: Props) {
     SetCurrentPage();
   }, [currentPageNumber]);
 
-  function SetCurrentPage() {
-    let page: JSX.Element[] = [];
+  function SetCurrentPage () {
+    const page: JSX.Element[] = [];
 
     for (let i = 1; i < 10; i++) {
       page.push(pages[i + currentPageNumber * 10]);
@@ -341,112 +352,121 @@ export function DocumentList({ caseDetails }: Props) {
   }
 
   const uploadFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setFilePath(value);
 
     const file = event.target.files[0];
-    //@ts-ignore
+    // @ts-expect-error aaaa
     setFile(file);
   };
 
   useEffect(() => {
     const func = async () => {
-      const fileName = filePath.replace(/^.*[\\\/]/, "");
+      const fileName = filePath.replace(/^.*[\\\\/]/, '');
       await UploadDocument(file, {
         title: fileName,
-        description: "No description provided.",
+        description: 'No description provided.',
         filename: fileName,
         file_path: null,
         case_worker_id: getPersonId(),
         uploaded_date: new Date().toISOString(),
         dated: new Date().toISOString(),
-        person_id: caseDetails["person_id"],
+        person_id: caseDetails['person_id']
       });
 
       setChanged(true);
     };
 
-    func();
+    void func();
   }, [file]);
 
+  if (errorWhy !== '') {
+    return <FiveZeroZero howToResolve={errorWhy} container={false} />
+  }
+
   return (
-    <Container className="shadow p-2">
+    <Container className='shadow p-2'>
       <Form>
-        <Form.Label className="m-2">📥 Upload Document: '</Form.Label>
+        <Form.Label htmlFor='document-file' className='m-2'>📥 Upload Document: </Form.Label>
         <Form.Control
-          className="w-100 p-2"
-          name="document-file"
-          type="file"
-          id="document-file"
+          className='w-100 p-2'
+          name='document-file'
+          type='file'
+          id='document-file'
           onChange={uploadFileChange}
         />
       </Form>
-      <Row className="p-2">
+      <Row className='p-2'>
         <Col>
           <br />
         </Col>
         <Col>
-          {" "}
+          {' '}
           <Dropdown>
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+              <Dropdown.Item href='#/action-1'>Action</Dropdown.Item>
+              <Dropdown.Item href='#/action-2'>Another action</Dropdown.Item>
+              <Dropdown.Item href='#/action-3'>Something else</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Col>
       </Row>
 
-      <Container className="d-flex flex-wrap">{currentPageElements}</Container>
+      <Container className='d-flex flex-wrap'>{currentPageElements}</Container>
       <br />
       <PaginationWrapper
         value={currentPageNumber}
         totalPages={pages.length - 1}
         onChange={handlePagination}
-        size="sm"
-      ></PaginationWrapper>
+        size='sm'
+       />
       <br />
     </Container>
   );
 }
 
-export function NoteList({ caseDetails, safeguarding }: NoteProps) {
+export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
   const [pages, setPages] = useState<JSX.Element[]>([]);
   const [pageSelectors, setPageSelectors] = useState<JSX.Element[]>([]);
   const [pageCurrentSelector, setCurrentSelector] = useState<JSX.Element[]>([]);
   const [pageCurrentSelectorCount, setPageCurrentSelectorCount] =
     useState<number>(0);
+  const [errorWhy, setErrorWhy] = useState('');
 
-  const [notes, setNotes] = useState<Object>();
+  const [notes, setNotes] = useState<unknown>();
 
-  function handlePagination(e: OnChangeEventType) {
-    const { name, value } = e.target;
+  function handlePagination (e: OnChangeEventType) {
+    const { value } = e.target;
 
     setPageCurrentSelectorCount(value);
   }
 
-  async function getNotes() {
-    let note_response;
-    if (safeguarding) {
-      note_response = await GetSafeguardingNotes(caseDetails["person_id"]);
-    } else {
-      note_response = await GetPersonNotes(caseDetails["person_id"]);
-    }
-    if (note_response["data"] != undefined) {
-      setNotes(note_response["data"]["message"]);
+  async function getNotes () {
+    try {
+      let noteResponse;
+      if (safeguarding) {
+        noteResponse = await GetSafeguardingNotes(caseDetails['person_id']);
+      } else {
+        noteResponse = await GetPersonNotes(caseDetails['person_id']);
+      }
+      if (noteResponse['data'] !== undefined) {
+        setNotes(noteResponse['data']['message']);
+      }
+    } catch (e) {
+      setErrorWhy('Unable to grab notes. Unsure why.')
     }
   }
 
   useEffect(() => {
-    getNotes();
+    void getNotes();
   }, []);
 
   useEffect(() => {
     SetCurrentSelectorList();
   }, [pageSelectors, pageCurrentSelectorCount]);
 
-  function SetCurrentSelectorList() {
-    let nav: JSX.Element[] = [];
+  function SetCurrentSelectorList (): void {
+    const nav: JSX.Element[] = [];
 
     for (let i = 1; i < 10; i++) {
       nav.push(pageSelectors[i + pageCurrentSelectorCount * 10]);
@@ -456,10 +476,10 @@ export function NoteList({ caseDetails, safeguarding }: NoteProps) {
 
   useEffect(() => {
     if (notes) {
-      let nav: JSX.Element[] = [];
-      let pages: JSX.Element[] = [];
+      const nav: JSX.Element[] = [];
+      const pages: JSX.Element[] = [];
 
-      let entries = Object.entries(notes);
+      const entries = Object.entries(notes);
 
       for (let i = 0; i < entries.length; i++) {
         nav.push(
@@ -473,54 +493,63 @@ export function NoteList({ caseDetails, safeguarding }: NoteProps) {
 
         pages.push(
           <Tab.Pane eventKey={`p${i}`}>
-            <Container className="p-3">
+            <Container className='p-3'>
               <p>
                 <h2> {entries[i][1].title} </h2>
                 <h3>
-                  {" "}
-                  <span className="bold">Date (of incident):</span>{" "}
-                  {new Date(entries[i][1].incident_date).toLocaleString()}{" "}
+                  {' '}
+                  <span className='bold'>Date (of incident):</span>{' '}
+                  {new Date(entries[i][1].incident_date).toLocaleString()}{' '}
                 </h3>
                 <h3>
-                  {" "}
-                  <span className="bold">Date (of note):</span>{" "}
-                  {new Date(entries[i][1].note_date).toLocaleString()}{" "}
-                </h3>
-
-                <h3>
-                  {" "}
-                  <span className="bold">Involved:</span> WIP
+                  {' '}
+                  <span className='bold'>Date (of note):</span>{' '}
+                  {new Date(entries[i][1].note_date).toLocaleString()}{' '}
                 </h3>
 
                 <h3>
-                  {" "}
-                  <span className="bold">Note details:</span>
+                  {' '}
+                  <span className='bold'>Involved:</span> {entries[i][1].involved}
+                </h3>
+
+                <h3>
+                  {' '}
+                  <span className='bold'>Note details:</span>
                 </h3>
                 <p> {entries[i][1].note} </p>
                 <h3>
-                  {" "}
-                  <span className="bold">Action plan:</span>
+                  {' '}
+                  <span className='bold'>Action plan:</span>
                 </h3>
                 <p>
-                  {" "}
+                  {' '}
                   <p> {entries[i][1].actions_to_take} </p>
                 </p>
               </p>
-              {isJWTSupervisor() ? (
-                <Button
-                  size="sm"
-                  onClick={async () => {
-                    await RemoveNote(entries[i][1].note_id);
-                    await getNotes();
-                  }}
-                  variant="warning"
-                  className="float-end mb-3 mt-3 p-2"
+              {isJWTSupervisor()
+                ? (
+                  <Button
+                    size='sm'
+                    onClick={async () => {
+                      try {
+                        if (safeguarding) {
+                          await RemoveSafeguardingNote(entries[i][1].note_id);
+                        }
+                        await RemoveNote(entries[i][1].note_id);
+                        await getNotes();
+                      } catch (e) {
+                        alert('Error: Could not remove note.')
+                      }
+                    }}
+                    variant='warning'
+                    className='float-end mb-3 mt-3 p-2'
                 >
-                  🔒 Delete
-                </Button>
-              ) : (
-                <></>
-              )}
+                    🔒 Delete
+                  </Button>
+                  )
+                : (
+                  <></>
+                  )}
             </Container>
           </Tab.Pane>
         );
@@ -535,24 +564,36 @@ export function NoteList({ caseDetails, safeguarding }: NoteProps) {
 
   const navigate = useNavigate();
 
+  if (errorWhy !== '') {
+    return <FiveZeroZero howToResolve={errorWhy} container={false} />
+  }
+
   return (
-    <Tab.Container defaultActiveKey="p1">
+    <Tab.Container defaultActiveKey='p1'>
       <Container>
         <Row>
-          <Col sm={3} id="selector" className={`shadow p-2`}>
-            <Nav variant="pills" className="flex-column">
+          <Col sm={3} id='selector' className={'shadow p-2'}>
+            <Nav variant='pills' className='flex-column'>
               {pageCurrentSelector}
               <br />
 
-              <Button
-                size="sm"
-                className="float-end"
+              { !safeguarding ? <Button
+                size='sm'
+                className='float-end'
                 onClick={() => {
-                  navigate(`/note/user/${caseDetails["person_id"]}`);
+                  navigate(`/note/user/${caseDetails['person_id']}`);
                 }}
               >
                 📄 Add Note
-              </Button>
+              </Button> : <Button
+                size='sm'
+                className='float-end'
+                onClick={() => {
+                  navigate(`/safeguarding/user/add/${caseDetails['person_id']}`);
+                }}
+              >
+                📄 Add Safeguarding Note
+              </Button>}
               <br />
               <br />
             </Nav>
@@ -560,8 +601,8 @@ export function NoteList({ caseDetails, safeguarding }: NoteProps) {
               value={pageCurrentSelectorCount}
               totalPages={pageSelectors.length - 1}
               onChange={handlePagination}
-              size="sm"
-            ></PaginationWrapper>
+              size='sm'
+             />
           </Col>
           <Col sm={9}>
             <Tab.Content>{pages}</Tab.Content>

@@ -1,20 +1,17 @@
-import React from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import BasicInformationDetails from "../components/basicInformationDetails";
-import Footer from "../components/footer";
-import { getPersonId } from "../glue/Auth";
-import HomepageLayout from "../layouts/homepageLayout";
-import StandardLayout from "../layouts/standardLayout";
+import { useParams } from 'react-router-dom';
+import BasicInformationDetails from '../components/basicInformationDetails';
+import { getPersonId } from '../glue/Auth';
+import StandardLayout from '../layouts/standardLayout';
+import { type ReactElement } from 'react';
 
-type Props = {
-  userID?: any;
-  self?: boolean;
-  hasCase: boolean;
-};
+interface Props {
+  self: boolean
+  hasCase: boolean
+}
 
-export function Profile({ userID, self, hasCase }: Props) {
+export function Profile ({ self, hasCase }: Props): ReactElement<any, any> {
   let { id } = useParams();
+
   if (self) {
     id = getPersonId();
   }
@@ -23,7 +20,7 @@ export function Profile({ userID, self, hasCase }: Props) {
     <StandardLayout
       content={
         <>
-          <BasicInformationDetails user={id} editMode={false} />
+          <BasicInformationDetails user={id} editMode={hasCase} />
         </>
       }
     />

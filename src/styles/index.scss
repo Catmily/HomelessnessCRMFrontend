@@ -20,7 +20,7 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-	background-color: #23a86a;
+	background-color: #28865a;
 }
 
 .nav-link.active {
@@ -28,7 +28,7 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 }
 
 #selector {
-	background-color: #aaaa;
+	background-color: #cdcdcd;
 }
 
 h1,
@@ -231,7 +231,7 @@ a:visited {
 }
 
 a.btn {
-	color: #e6e6e6;
+	color: #ffffff !important;
 	text-decoration: none;
 }
 
@@ -239,6 +239,9 @@ a.btn:hover {
 	color: #f3f3f3;
 }
 
+span.lines, span.words, span.cursor {
+	color: #222;
+}
 
 a.btn:active {
 	color: #cae7d0;

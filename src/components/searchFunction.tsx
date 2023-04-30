@@ -1,23 +1,26 @@
-import { useEffect, useState } from "react";
-import * as $ from "jquery";
+import { useEffect, useState } from 'react';
+import $ from 'jquery';
 
-import { Form } from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
-import { GetCaseWorkersGeneric, GetPeopleGeneric } from "../glue/DBConnector";
+import { Form } from 'react-bootstrap';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { GetCaseWorkersGeneric, GetPeopleGeneric } from '../glue/DBConnector';
 
-type Props = {
-  staffOnly: boolean;
-};
+interface Props {
+  staffOnly: boolean
+  dropdownSelect: any
+}
 
-function SearchPerson({ staffOnly }: Props) {
+function SearchPerson ({ staffOnly, dropdownSelect }: Props) {
   const [menuItems, setMenuItems] = useState<JSX.Element[]>([]);
   const [people, setPeople] = useState([]);
   const [changed, setChanged] = useState(true);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [changedSelection, setChangedSelection] = useState(false);
 
-  const [searchBox, setSearchBox] = useState("");
+  const [searchBox, setSearchBox] = useState('');
   const [selectedPersonDesc, setSelectedPersonDesc] = useState(
-    "Type the name of the person"
+    'Type the name of the person'
   );
   const [selectedPersonId, setSelectedPersonId] = useState([]);
 
@@ -26,93 +29,107 @@ function SearchPerson({ staffOnly }: Props) {
       setChanged(false);
       const func = async () => {
         let ppl;
-        if (searchBox != "") {
+        if (searchBox !== '') {
           if (staffOnly) {
             ppl = await GetCaseWorkersGeneric({ preferred_name: searchBox });
           } else {
-            ppl = await GetPeopleGeneric({ preferred_name: searchBox });
+            const ppl = [];
+            const res = await GetPeopleGeneric({ preferred_name: searchBox });
+
+            res['data']['message'].forEach(element => {
+              ppl.push(element[1]);
+            })
+
+            setPeople(ppl);
+            return;
           }
         } else {
           if (staffOnly) {
             ppl = await GetCaseWorkersGeneric({});
           } else {
-            ppl = await GetPeopleGeneric({});
+            const ppl = [];
+            const res = await GetPeopleGeneric({});
+
+            res['data']['message'].forEach(element => {
+              ppl.push(element[1]);
+            })
+
+            setPeople(ppl);
+            return;
           }
         }
 
-        //@ts-ignore
-        setPeople(ppl["data"]["message"]);
+        setPeople(ppl['data']['message']);
       };
-      func();
+      void func();
     }
   }, [changed]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
+    const { value } = event.target;
 
-    //@ts-ignore - jquery
     setSearchBox(value);
     setChanged(true);
   };
 
   useEffect(() => {
     const func = async () => {
-      let e = [];
+      const e = [];
 
-      for (const p in people)
+      // eslint-disable-next-line @typescript-eslint/no-for-in-array
+      for (const p in people) {
         e.push(
           <Dropdown.Item
-            id={p + "_dropdown"}
+            eventKey={people[p].person_id}
+            id={p + '_dropdown'}
             onClick={() => {
               if (selectedPersonId.includes(people[p].person_id)) {
                 let a = selectedPersonId;
                 a = a.filter((e) => e !== people[p].person_id);
                 setSelectedPersonId(a);
 
-                //@ts-ignore
-                $(`#${p + "_dropdown"}`).removeClass("selected_dropdown");
+                $(`#${p + '_dropdown'}`).removeClass('selected_dropdown');
               } else {
                 setSelectedPersonId([...selectedPersonId, people[p].person_id]);
-                //@ts-ignore
-                $(`#${p + "_dropdown"}`).addClass("selected_dropdown");
+                $(`#${p + '_dropdown'}`).addClass('selected_dropdown');
               }
               setChanged(true);
             }}
           >
-            ID: {people[p].person_id} | {people[p].preferred_name} |{" "}
+            ID: {people[p].person_id} | {people[p].preferred_name} |{' '}
             {people[p].full_name}
           </Dropdown.Item>
         );
-      //@ts-ignore
+      }
 
       setMenuItems(e);
     };
-    func();
+    void func();
   }, [people]);
 
   useEffect(() => {
     const func = async () => {
-      let l = selectedPersonId.length;
+      const l = selectedPersonId.length;
       setSelectedPersonDesc(`${l} people selected`);
       setChangedSelection(false);
     };
-    func();
+    void func();
   }, [selectedPersonId]);
 
   return (
-    <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic" className="w-100">
+    <Dropdown onSelect={dropdownSelect}>
+      <Dropdown.Toggle variant='success' id='dropdown-basic' className='w-100'>
         {selectedPersonDesc}
       </Dropdown.Toggle>
 
-      <Dropdown.Menu className="w-100">
+      <Dropdown.Menu className='w-100'>
         <Form>
           <Form.Control
             onChange={handleChange}
-            placeholder="Type the name of the person..."
-            type="text"
-            name="searchPerson"
-          ></Form.Control>
+            placeholder='Type the name of the person...'
+            type='text'
+            name='searchPerson'
+           />
           {menuItems}
         </Form>
       </Dropdown.Menu>
