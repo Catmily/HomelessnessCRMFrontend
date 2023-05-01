@@ -10,7 +10,7 @@ export async function RegisterAccount (
   email: string,
   password: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/register',
+    'https://homelesscrm.com/api/register',
     { login: login, password: password, email: email },
     { headers: addTokenHeader() }
   );
@@ -19,7 +19,7 @@ export async function RegisterAccount (
 
 export async function GetUserProfile (personId?: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/person/get',
+    'https://homelesscrm.com/api/person/get',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -28,7 +28,7 @@ export async function GetUserProfile (personId?: string): Promise<AxiosResponse<
 
 export async function GetKeysDB (models): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/keys/get',
+    'https://homelesscrm.com/api/keys/get',
     { models },
     { headers: addTokenHeader() }
   );
@@ -36,13 +36,13 @@ export async function GetKeysDB (models): Promise<AxiosResponse<any, any>> {
 }
 
 export async function GetStats (): Promise<AxiosResponse<any, any>> {
-  const res = await axios.put('http://localhost/api/stats');
+  const res = await axios.put('https://homelesscrm.com/api/stats');
   return res;
 }
 
 export async function HasCase (personId: string): Promise<boolean> {
   const res = await axios.put(
-    'http://localhost/api/query/contains/case',
+    'https://homelesscrm.com/api/query/contains/case',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -54,7 +54,7 @@ export async function HasCase (personId: string): Promise<boolean> {
 }
 export async function IsCaseWorker (personId: string): Promise<boolean> {
   const res = await axios.put(
-    'http://localhost/api/query/contains/caseworker',
+    'https://homelesscrm.com/api/query/contains/caseworker',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -66,7 +66,7 @@ export async function IsCaseWorker (personId: string): Promise<boolean> {
 }
 export async function IsSupervisor (personId: string) {
   const res = await axios.put(
-    'http://localhost/api/query/contains/supervisor',
+    'https://homelesscrm.com/api/query/contains/supervisor',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -80,7 +80,7 @@ export async function IsSupervisor (personId: string) {
 
 export async function SupervisorPerms (personId: string, add: boolean): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/person/set/supervisor',
+    'https://homelesscrm.com/api/person/set/supervisor',
     { person_id: personId, add: add },
     { headers: addTokenHeader() }
   );
@@ -90,7 +90,7 @@ export async function SupervisorPerms (personId: string, add: boolean): Promise<
 
 export async function CaseWorkerPerms (personId: string, add: boolean): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/person/set/caseworker',
+    'https://homelesscrm.com/api/person/set/caseworker',
     { person_id: personId, add: +add },
     { headers: addTokenHeader() }
   );
@@ -100,7 +100,7 @@ export async function CaseWorkerPerms (personId: string, add: boolean): Promise<
 
 export async function AddCaseWorkerToCase (personId: string, caseId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/case/add-caseworker',
+    'https://homelesscrm.com/api/case/add-caseworker',
     { person_id: personId, case_id: caseId },
     { headers: addTokenHeader() }
   );
@@ -109,7 +109,7 @@ export async function AddCaseWorkerToCase (personId: string, caseId: string): Pr
 
 export async function RemoveCaseWorkerFromCase (caseId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/case/remove-caseworker',
+    'https://homelesscrm.com/api/case/remove-caseworker',
     { case_id: caseId },
     { headers: addTokenHeader() }
   );
@@ -118,7 +118,7 @@ export async function RemoveCaseWorkerFromCase (caseId: string): Promise<AxiosRe
 
 export async function GetPersonSensitive (personId?: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/person/sensitive/get',
+    'https://homelesscrm.com/api/person/sensitive/get',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -128,7 +128,7 @@ export async function GetPersonSensitive (personId?: string): Promise<AxiosRespo
 
 export async function SetPersonSensitiveProfile (userDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/person/sensitive',
+    'https://homelesscrm.com/api/person/sensitive',
     userDetails,
     { headers: addTokenHeader() }
   );
@@ -137,7 +137,7 @@ export async function SetPersonSensitiveProfile (userDetails: Record<string, unk
 }
 
 export async function SetUserProfile (userDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
-  const res = await axios.put('http://localhost/api/person', userDetails, {
+  const res = await axios.put('https://homelesscrm.com/api/person', userDetails, {
     headers: addTokenHeader()
   });
 
@@ -145,7 +145,7 @@ export async function SetUserProfile (userDetails: Record<string, unknown>): Pro
 }
 
 export async function SetUserProfileAdd (userDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
-  const res = await axios.put('http://localhost/api/person/add', userDetails, {
+  const res = await axios.put('https://homelesscrm.com/api/person/add', userDetails, {
     headers: addTokenHeader()
   });
 
@@ -153,7 +153,7 @@ export async function SetUserProfileAdd (userDetails: Record<string, unknown>): 
 }
 export async function GetCases (caseWorkerId?: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/cases/get',
+    'https://homelesscrm.com/api/cases/get',
     { case_worker_id: caseWorkerId },
     { headers: addTokenHeader() }
   );
@@ -163,7 +163,7 @@ export async function GetCases (caseWorkerId?: string): Promise<AxiosResponse<an
 
 export async function GetCasesGeneric (searchQueries: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/search/case',
+    'https://homelesscrm.com/api/search/case',
     searchQueries,
     { headers: addTokenHeader() }
   );
@@ -173,7 +173,7 @@ export async function GetCasesGeneric (searchQueries: Record<string, unknown>): 
 
 export async function GetNotesGeneric (searchQueries: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/search/note',
+    'https://homelesscrm.com/api/search/note',
     searchQueries,
     { headers: addTokenHeader() }
   );
@@ -183,7 +183,7 @@ export async function GetNotesGeneric (searchQueries: Record<string, unknown>): 
 
 export async function GetPeopleGeneric (searchQueries: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/search/person',
+    'https://homelesscrm.com/api/search/person',
     searchQueries,
     { headers: addTokenHeader() }
   );
@@ -193,7 +193,7 @@ export async function GetPeopleGeneric (searchQueries: Record<string, unknown>):
 
 export async function GetCaseWorkersGeneric (searchQueries: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/search/caseworker',
+    'https://homelesscrm.com/api/search/caseworker',
     searchQueries,
     { headers: addTokenHeader() }
   );
@@ -203,7 +203,7 @@ export async function GetCaseWorkersGeneric (searchQueries: Record<string, unkno
 
 export async function GetDocumentsGeneric (searchQueries: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/search/doc',
+    'https://homelesscrm.com/api/search/doc',
     searchQueries,
     { headers: addTokenHeader() }
   );
@@ -213,7 +213,7 @@ export async function GetDocumentsGeneric (searchQueries: Record<string, unknown
 
 export async function GetFullCase (caseId?: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/case/get',
+    'https://homelesscrm.com/api/case/get',
     { case_id: caseId },
     { headers: addTokenHeader() }
   );
@@ -221,7 +221,7 @@ export async function GetFullCase (caseId?: string): Promise<AxiosResponse<any, 
 }
 
 export async function ChangeCase (caseDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
-  const res = await axios.put('http://localhost/api/case', caseDetails, {
+  const res = await axios.put('https://homelesscrm.com/api/case', caseDetails, {
     headers: addTokenHeader()
   });
 
@@ -229,7 +229,7 @@ export async function ChangeCase (caseDetails: Record<string, unknown>): Promise
 }
 
 export async function RemoveCase (caseId: number): Promise<AxiosResponse<any, any>> {
-  const res = await axios.delete('http://localhost/api/case', {
+  const res = await axios.delete('https://homelesscrm.com/api/case', {
     data: { case_id: caseId },
     headers: addTokenHeader()
   });
@@ -237,7 +237,7 @@ export async function RemoveCase (caseId: number): Promise<AxiosResponse<any, an
 }
 
 export async function RemovePerson (personId: string): Promise<AxiosResponse<any, any>> {
-  const res = await axios.delete('http://localhost/api/person', {
+  const res = await axios.delete('https://homelesscrm.com/api/person', {
     data: { person_id: personId },
     headers: addTokenHeader()
   });
@@ -245,7 +245,7 @@ export async function RemovePerson (personId: string): Promise<AxiosResponse<any
 }
 
 export async function RemoveNote (noteId: string): Promise<AxiosResponse<any, any>> {
-  const res = await axios.delete('http://localhost/api/note', {
+  const res = await axios.delete('https://homelesscrm.com/api/note', {
     data: { note_id: noteId },
     headers: addTokenHeader()
   });
@@ -253,7 +253,7 @@ export async function RemoveNote (noteId: string): Promise<AxiosResponse<any, an
 }
 
 export async function RemoveSafeguardingNote (noteId: string): Promise<AxiosResponse<any, any>> {
-  const res = await axios.delete('http://localhost/api/safeguarding', {
+  const res = await axios.delete('https://homelesscrm.com/api/safeguarding', {
     data: { note_id: noteId },
     headers: addTokenHeader()
   });
@@ -261,7 +261,7 @@ export async function RemoveSafeguardingNote (noteId: string): Promise<AxiosResp
 }
 
 export async function RemoveDoc (documentId: string): Promise<AxiosResponse<any, any>> {
-  const res = await axios.delete('http://localhost/api/doc', {
+  const res = await axios.delete('https://homelesscrm.com/api/doc', {
     data: { document_id: documentId },
     headers: addTokenHeader()
   });
@@ -269,7 +269,7 @@ export async function RemoveDoc (documentId: string): Promise<AxiosResponse<any,
 }
 
 export async function AddNote (noteDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
-  const res = await axios.put('http://localhost/api/note', noteDetails, {
+  const res = await axios.put('https://homelesscrm.com/api/note', noteDetails, {
     headers: addTokenHeader()
   });
 
@@ -278,7 +278,7 @@ export async function AddNote (noteDetails: Record<string, unknown>): Promise<Ax
 
 export async function AddSafeguardingNote (safeguardNoteDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/safeguarding/add',
+    'https://homelesscrm.com/api/safeguarding/add',
     safeguardNoteDetails,
     { headers: addTokenHeader() }
   );
@@ -288,7 +288,7 @@ export async function AddSafeguardingNote (safeguardNoteDetails: Record<string, 
 
 export async function GetDocuments (personId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/docs/get',
+    'https://homelesscrm.com/api/docs/get',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -298,7 +298,7 @@ export async function GetDocuments (personId: string): Promise<AxiosResponse<any
 
 export async function GetDocument (documentID: string): Promise<void> {
   const res = await axios.put(
-    'http://localhost/api/doc/get',
+    'https://homelesscrm.com/api/doc/get',
     { document_id: documentID },
     { headers: addTokenHeader(), responseType: 'blob' }
   );
@@ -311,7 +311,7 @@ export async function GetDocument (documentID: string): Promise<void> {
 
 export async function GetDocumentInfo (documentID: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/info/get',
+    'https://homelesscrm.com/api/info/get',
     { document_id: documentID },
     { headers: addTokenHeader() }
   );
@@ -323,7 +323,7 @@ export async function UploadDocument (document, documentDetails: Record<string, 
   headers['Content-Type'] = 'multipart/form-data';
 
   const res = await axios.post(
-    'http://localhost/api/doc',
+    'https://homelesscrm.com/api/doc',
     { file: document, info: documentDetails },
     { headers: headers }
   );
@@ -333,7 +333,7 @@ export async function UploadDocument (document, documentDetails: Record<string, 
 
 export async function GetPersonNotes (personId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/note/get',
+    'https://homelesscrm.com/api/note/get',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -343,7 +343,7 @@ export async function GetPersonNotes (personId: string): Promise<AxiosResponse<a
 
 export async function GetSafeguardingNotes (personId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/safeguarding/get',
+    'https://homelesscrm.com/api/safeguarding/get',
     { person_id: personId },
     { headers: addTokenHeader() }
   );
@@ -353,7 +353,7 @@ export async function GetSafeguardingNotes (personId: string): Promise<AxiosResp
 
 export async function WholePersonExport (personId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
-    'http://localhost/api/export/get',
+    'https://homelesscrm.com/api/export/get',
     { person_id: personId },
     { headers: addTokenHeader(), responseType: 'blob' }
   );

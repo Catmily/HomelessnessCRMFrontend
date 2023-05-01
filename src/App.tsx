@@ -72,7 +72,7 @@ export function LogoutComponent () {
 
 export async function Logout (): Promise<boolean> {
   await axios.put(
-    'http://localhost/api/logout',
+    'https://homelesscrm.com/api/logout',
     {},
     { headers: addTokenHeader() }
   )

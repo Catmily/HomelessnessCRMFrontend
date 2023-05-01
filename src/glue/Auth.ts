@@ -53,7 +53,7 @@ export function getPersonId (): string {
 }
 
 export async function loginBackend (login: string, password: string): Promise<void> {
-  const res = await axios.put('http://localhost/api/login', {
+  const res = await axios.put('https://homelesscrm.com/api/login', {
     login,
     password
   });
@@ -62,7 +62,7 @@ export async function loginBackend (login: string, password: string): Promise<vo
 
 export async function changePassword (c: string, pOne: string, pTwo: string): Promise<void> {
   const res = await axios.put(
-    'http://localhost/api/change-password',
+    'https://homelesscrm.com/api/change-password',
     {
       login: getTokenUser(),
       currentPassword: c,
