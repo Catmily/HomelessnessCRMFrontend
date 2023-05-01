@@ -493,7 +493,7 @@ export default function BasicInformationDetails ({
                             setIsCaseWorker(false);
                           } else {
                             await CaseWorkerPerms(user, true);
-                            setIsManager(true);
+                            setIsCaseWorker(true);
                           }
                         }}
                     >
