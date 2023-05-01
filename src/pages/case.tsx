@@ -86,7 +86,7 @@ export default function Case () {
           <Button size='sm' href={`/profile/${person['person_id']}`}>
             Go to Client Profile
           </Button>
-          <Button size='sm' className='ms-2' href={`/safeguarding/user/add/${id}`}>Make Safeguarding Note</Button>
+          <Button size='sm' className='ms-2' href={`/safeguarding/user/add/${person['preferred_name']}`}>Make Safeguarding Note</Button>
           <Container className='my-4 '>
             <Tab.Container defaultActiveKey='p2'>
               <Row>
