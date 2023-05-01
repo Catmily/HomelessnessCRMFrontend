@@ -421,7 +421,7 @@ export function DocumentList ({ caseDetails }: Props) {
       <br />
       <PaginationWrapper
         value={currentPageNumber}
-        totalPages={pages.length - 1}
+        totalPages={Math.floor(pages.length / 10) + 1}
         onChange={handlePagination}
         size='sm'
        />
@@ -574,7 +574,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
   }
 
   return (
-    <Tab.Container defaultActiveKey={safeguarding ? 'ps1' : 'p1'}>
+    <Tab.Container defaultActiveKey={safeguarding ? 'ps0' : 'p0'}>
       <Container>
         <Row>
           <Col sm={3} id='selector' className={'shadow p-2'}>
@@ -604,7 +604,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
             </Nav>
             <PaginationWrapper
               value={pageCurrentSelectorCount}
-              totalPages={pages.length - 1}
+              totalPages={Math.floor(pageSelectors.length / 10) + 1}
               onChange={handlePagination}
               size='sm'
              />
