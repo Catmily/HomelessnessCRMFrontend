@@ -488,7 +488,7 @@ export default function BasicInformationDetails ({
                         <></>
                         )}
 
-                    {isJWTSupervisor() && userId !== 1
+                    {isJWTSupervisor() && userId !== '1'
                       ? (
                         <Col>
                           <Button
