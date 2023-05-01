@@ -170,7 +170,6 @@ export function CaseDetails ({ caseDetails, editMode = false }: Props): ReactEle
           {fields}
           {newFields}
 
-          <p className='align-right'>Last updated: 12/03/2023 14:12</p>
         </Form>
       </fieldset>
       <Row>
