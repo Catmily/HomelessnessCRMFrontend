@@ -451,7 +451,7 @@ export default function BasicInformationDetails ({
                   type='text'
                   id='gender'
                   name='gender'
-                  placeholder='gender'
+                  placeholder='Gender'
                   onChange={handleChangeBasic}
                   isInvalid={(userData['gender'] != null) ? !(userData['gender'].length < 15) : false}
 
