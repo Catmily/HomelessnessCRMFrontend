@@ -489,7 +489,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
       for (let i = 0; i < entries.length; i++) {
         nav.push(
           <Nav.Item>
-            <Nav.Link eventKey={`p${i}`}>
+            <Nav.Link eventKey={safeguarding ? `ps${i}` : `p${i}`}>
               {entries[i][1].title}
               <p>Date: {new Date(entries[i][1].note_date).toLocaleString()} </p>
             </Nav.Link>
@@ -497,7 +497,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
         );
 
         pages.push(
-          <Tab.Pane eventKey={`p${i}`}>
+          <Tab.Pane eventKey={safeguarding ? `ps${i}` : `p${i}`}>
             <Container className='p-3'>
               <p>
                 <h2> {entries[i][1].title} </h2>
