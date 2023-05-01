@@ -123,19 +123,50 @@ export default function BasicInformationDetails ({
     }));
   };
 
+  function checkRequiredFields (): boolean {
+    if (userData != null) {
+      if (userData['preferred_name'] === '') {
+        alert('Please enter a preferred name.')
+        return false
+      }
+      if (userData['city'] === '') {
+        alert('Please enter a city. If NFA, the nearest one, or the office.')
+        return false
+      }
+      if (userData['postcode'] === '') {
+        alert('Please enter a postcode. If NFA, the nearest one, or the office.')
+        return false
+      }
+      if (userData['pronouns'] === '') {
+        alert('Please enter the person\'s pronouns. If unknown, write N/A.')
+        return false
+      }
+      if (userData['first_language'] === '') {
+        alert('Please enter the person\'s first language. If unknown, assume English.')
+        return false
+      }
+    }
+    return true;
+  }
+
   useEffect(() => {
     if (changed) {
       const func = async () => {
         if (editMode) {
-          const res = await SetUserProfileAdd(userData);
-          if (editMode) {
+          let res;
+          if (checkRequiredFields) {
+            res = await SetUserProfileAdd(userData);
+          }
+          if (editMode && res != null) {
             const rowId = res.data.row_id;
             navigate(`/profile/${rowId}`);
           }
         } else {
           try {
-            await SetUserProfile(userData);
-            await SetPersonSensitiveProfile(userDataSensitive);
+            if (checkRequiredFields()) {
+              await SetUserProfile(userData);
+              await SetPersonSensitiveProfile(userDataSensitive);
+            }
           } catch (e) {
             alert('Error: Could not set user profile.')
           }
@@ -325,7 +356,7 @@ export default function BasicInformationDetails ({
                   />
                 </InputGroup>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id='inputGroupPrepend'>City</InputGroup.Text>
+                  <InputGroup.Text id='inputGroupPrepend'>City* (if none, closest)</InputGroup.Text>
                   <Form.Control
                     type='text'
                     name='city'
@@ -338,7 +369,7 @@ export default function BasicInformationDetails ({
                 </InputGroup>
                 <InputGroup hasValidation>
                   <InputGroup.Text id='inputGroupPrepend'>
-                    Postcode
+                    Postcode* (if not, closest)
                   </InputGroup.Text>
 
                   <Form.Control
@@ -370,7 +401,7 @@ export default function BasicInformationDetails ({
                 <Form.Control.Feedback type='invalid'>
                   Pronouns longer than 15 characters.
                 </Form.Control.Feedback>
-                <Form.Label column htmlFor='first_language'>First Language</Form.Label>
+                <Form.Label column htmlFor='first_language'>First Language*</Form.Label>
                 <Form.Control
                   type='text'
                   id='first_language'
