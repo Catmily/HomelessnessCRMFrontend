@@ -169,11 +169,12 @@ export default function BasicInformationDetails ({
         setChanged(false);
         setFormEnabled(!formEnabled);
       };
+
       if (checkRequiredFields()) {
         setChanged(false);
-        return;
+      } else {
+        void func();
       }
-      void func();
     }
   }, [changed]);
 
