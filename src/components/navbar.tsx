@@ -35,7 +35,7 @@ export default function NavBar (): JSX.Element {
             {isJWTSupervisor()
               ? (
                 <><Nav.Link href='/register'>Register User</Nav.Link>
-                <Nav.Link href='/metrics'>Metrics</Nav.Link></>
+                  <Nav.Link href='/metrics'>Metrics</Nav.Link></>
                 )
               : (
                 <></>
