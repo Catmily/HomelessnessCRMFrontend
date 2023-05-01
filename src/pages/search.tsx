@@ -73,7 +73,7 @@ export default function Search (): ReactElement<any, any> {
         const caseId = caObj[element].case_id;
         tempCase.push(
           <tr>
-            <td>Case (ID: case_id)</td>
+            <td>Case (ID: {caseId})</td>
             <td>{caObj[element].date}</td>
             <td>{caObj[element].person}</td>
             <td>{caObj[element].summary}</td>
@@ -90,13 +90,13 @@ export default function Search (): ReactElement<any, any> {
         );
       }
       for (const element in noteObj) {
-        const noteId = noteObj[element].note_id;
-        const personId = noteObj[element].personId;
+        const noteId = noteObj[element][1]['note_id'];
+        const personId = noteObj[element][1]['person_id'];
 
         let noteIdText = `Note (ID: ${noteId})`
 
-        if (noteObj[element][0].safeguarding_id) {
-          const safeguardingId = noteObj[element].safeguarding_id;
+        if (noteObj[element][0]['safeguarding_id']) {
+          const safeguardingId = noteObj[element][0]['safeguarding_id'];
           noteIdText +=
             `, Safeguarding Note (ID: ${safeguardingId})`
         }
@@ -148,7 +148,7 @@ export default function Search (): ReactElement<any, any> {
         let personIdText = `Person (ID: ${personId})`
 
         if (perObj[element][0].staff_id) {
-          const staffId = perObj[element].staff_id;
+          const staffId = perObj[element][0].staff_id;
           personIdText += `, Staff (ID: ${staffId})`
         }
 
