@@ -167,8 +167,8 @@ export default function BasicInformationDetails ({
           try {
             if (checkRequiredFields()) {
               await SetUserProfile(userData);
-              await SetPersonSensitiveProfile(userDataSensitive); }
-            else {
+              await SetPersonSensitiveProfile(userDataSensitive);
+            } else {
               return;
             }
           } catch (e) {
