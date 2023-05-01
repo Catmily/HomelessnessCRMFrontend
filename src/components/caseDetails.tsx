@@ -396,6 +396,11 @@ export function DocumentList ({ caseDetails }: Props) {
           onChange={uploadFileChange}
         />
       </Form>
+      <p>Allowed extensions are: jpg, jpeg, txt, rtf, doc, docx, webp,
+        odt, ods, fodt, fods, odp, fodp, xls, xlsx,
+        ppt, pptx, pdf, zip, zipx, rar, 7z, png, gif,
+        mp3, wav, wma, flac, mp4, m4a, m4v, avi, webm, ogg, webp, svg</p>
+
       <Row className='p-2'>
         <Col>
           <br />
