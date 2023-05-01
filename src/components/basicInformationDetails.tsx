@@ -151,6 +151,7 @@ export default function BasicInformationDetails ({
 
   useEffect(() => {
     if (changed) {
+      setChanged(false);
       const func = async () => {
         if (editMode) {
           let res;
@@ -175,7 +176,7 @@ export default function BasicInformationDetails ({
             alert('Error: Could not set user profile.')
           }
         }
-        setChanged(false);
+        
         setFormEnabled(!formEnabled);
       };
       void func();
