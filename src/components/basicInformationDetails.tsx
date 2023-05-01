@@ -170,7 +170,7 @@ export default function BasicInformationDetails ({
         setFormEnabled(!formEnabled);
       };
 
-      if (checkRequiredFields()) {
+      if (!checkRequiredFields()) {
         setChanged(false);
       } else {
         void func();
