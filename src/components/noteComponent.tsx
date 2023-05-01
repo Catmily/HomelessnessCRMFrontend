@@ -4,13 +4,15 @@ import SimpleMdeReact from 'react-simplemde-editor';
 import { type Options } from 'easymde';
 import 'easymde/dist/easymde.min.css';
 import { getPersonId } from '../glue/Auth';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import {
   AddNote,
   AddSafeguardingNote,
   GetUserProfile
 } from '../glue/DBConnector';
 // import SearchPerson from './searchFunction';
+const navigate = useNavigate()
 
 interface Props {
   safeguarding: boolean
@@ -63,6 +65,9 @@ export const NoteComponent = ({ safeguarding }: Props) => {
               person_id: id
             });
           }
+
+          navigate(`/profile/${id}`);
+
         } catch (e) {
           alert('Error: Your note could not be submitted.')
         }

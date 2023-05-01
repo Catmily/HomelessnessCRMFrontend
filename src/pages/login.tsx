@@ -266,6 +266,7 @@ export function Register () {
 
             try {
               await RegisterAccount(login, email, password);
+              alert('Account registered.')
             } catch (e) {
               alert("Can't register account. You have not been registered.")
             }
