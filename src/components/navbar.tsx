@@ -31,11 +31,11 @@ export default function NavBar (): JSX.Element {
                 )}
             <Nav.Link href='/search'>Search</Nav.Link>
             <Nav.Link href='/profile/add'>Add Person</Nav.Link>
-            <Nav.Link href='/register'>Register Person</Nav.Link>
 
             {isJWTSupervisor()
               ? (
-                <Nav.Link href='/metrics'>Metrics</Nav.Link>
+                <><Nav.Link href='/register'>Register User</Nav.Link>
+                <Nav.Link href='/metrics'>Metrics</Nav.Link></>
                 )
               : (
                 <></>
