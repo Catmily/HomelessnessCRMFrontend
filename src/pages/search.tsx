@@ -12,8 +12,7 @@ import {
   GetDocumentsGeneric,
   GetKeysDB,
   GetNotesGeneric,
-  GetPeopleGeneric,
-  GetUserProfile
+  GetPeopleGeneric
 } from '../glue/DBConnector';
 import {
   caseFieldType,
