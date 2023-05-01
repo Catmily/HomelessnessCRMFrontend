@@ -214,7 +214,7 @@ export function Register () {
     <Container fluid className={'login-content fade-in'}>
       <Form className={'login-dialog shadow'}>
         <Icon />
-        <h1 className='py-2'>Register at Homeless Check</h1>
+        <h1 className='py-2'>Register a User at Homeless Check</h1>
 
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='user'>Username</Form.Label>
@@ -248,6 +248,7 @@ export function Register () {
         <PasswordStrengthBar password={password} />
 
         <p>Your password needs at least one uppercase letter, one lowercase letter, one symbol, and must be more than 8 characters.</p>
+        <p>You may want to advise the user to change the password after logging in.</p>
 
         <Button
           variant='primary'
@@ -271,15 +272,6 @@ export function Register () {
           }}
         >
           🗒️ Register at Homeless Check
-        </Button>
-
-        <Button
-          variant='secondary'
-          type='button'
-          href='/login'
-          className='mx-2'
-        >
-          Return to Login
         </Button>
 
         <Button variant='secondary' type='button' href='/' className='mx-auto'>
