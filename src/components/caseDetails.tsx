@@ -273,8 +273,8 @@ export function DocumentList ({ caseDetails }: Props) {
     if (changed) {
       const func = async () => {
         try {
-          const docs = await getDocuments();
-          setDocuments(docs)
+          setPages([])
+          await getDocuments();
           setChanged(false);
         } catch (e) {
           setErrorWhy('Could not retrieve the case documents. Unsure why.')
