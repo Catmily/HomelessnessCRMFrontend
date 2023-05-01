@@ -11,7 +11,7 @@ export default function Cases (): ReactElement<any, any> {
 
   useEffect(() => {
     const func = async (): Promise<void> => {
-      if (!cases) {
+      if (cases != null) {
         try {
           const temp = await GetCases(getPersonId());
           const cases = temp['data']['message'];
