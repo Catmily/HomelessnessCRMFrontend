@@ -125,23 +125,23 @@ export default function BasicInformationDetails ({
 
   function checkRequiredFields (): boolean {
     if (userData != null) {
-      if (userData['preferred_name'] === '') {
+      if (userData['preferred_name'] == null) {
         alert('Please enter a preferred name.')
         return false
       }
-      if (userData['city'] === '') {
+      if (userData['city'] == null) {
         alert('Please enter a city. If NFA, the nearest one, or the office.')
         return false
       }
-      if (userData['postcode'] === '') {
+      if (userData['postcode'] == null) {
         alert('Please enter a postcode. If NFA, the nearest one, or the office.')
         return false
       }
-      if (userData['pronouns'] === '') {
+      if (userData['pronouns'] == null) {
         alert('Please enter the person\'s pronouns. If unknown, write N/A.')
         return false
       }
-      if (userData['first_language'] === '') {
+      if (userData['first_language'] == null) {
         alert('Please enter the person\'s first language. If unknown, assume English.')
         return false
       }
@@ -156,6 +156,8 @@ export default function BasicInformationDetails ({
           let res;
           if (checkRequiredFields()) {
             res = await SetUserProfileAdd(userData);
+          } else {
+            return;
           }
           if (editMode && res != null) {
             const rowId = res.data.row_id;
@@ -165,7 +167,9 @@ export default function BasicInformationDetails ({
           try {
             if (checkRequiredFields()) {
               await SetUserProfile(userData);
-              await SetPersonSensitiveProfile(userDataSensitive);
+              await SetPersonSensitiveProfile(userDataSensitive); }
+            else {
+              return;
             }
           } catch (e) {
             alert('Error: Could not set user profile.')
