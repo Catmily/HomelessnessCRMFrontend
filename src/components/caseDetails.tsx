@@ -574,7 +574,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
   }
 
   return (
-    <Tab.Container defaultActiveKey='p1'>
+    <Tab.Container defaultActiveKey={safeguarding ? 'ps1' : 'p1'}>
       <Container>
         <Row>
           <Col sm={3} id='selector' className={'shadow p-2'}>
