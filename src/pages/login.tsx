@@ -156,7 +156,7 @@ export function ChangePassword () {
               alert('Passwords are not the same!')
             }
 
-            if (passwordOne !== '' || passwordTwo !== '') {
+            if (passwordOne === '' || passwordTwo === '') {
               alert('Passwords cannot be blank!')
             }
             if (!passwordOne.match('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')) {
@@ -259,7 +259,7 @@ export function Register () {
             if (!password.match('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')) {
               alert('Password not strong enough!')
             }
-            if (login !== '') {
+            if (login === '') {
               alert('User cannot be blank!')
             }
 
