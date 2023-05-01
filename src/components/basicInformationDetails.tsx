@@ -157,7 +157,7 @@ export default function BasicInformationDetails ({
           if (checkRequiredFields()) {
             res = await SetUserProfileAdd(userData);
           } else {
-            return;
+            return false;
           }
           if (editMode && res != null) {
             const rowId = res.data.row_id;
@@ -176,6 +176,7 @@ export default function BasicInformationDetails ({
           }
         }
         setChanged(false);
+        setFormEnabled(!formEnabled);
       };
       void func();
     }
@@ -246,7 +247,6 @@ export default function BasicInformationDetails ({
                   className={'w-100'}
                   onClick={() => {
                     setChanged(true);
-                    setFormEnabled(!formEnabled);
                   }}
                 >
                   📥 Submit
