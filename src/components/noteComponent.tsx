@@ -68,7 +68,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
 
           navigate(`/profile/${id}`);
         } catch (e) {
-          alert('Error: Your note could not be submitted.')
+          alert('Error: Your note could not be submitted. Please ensure that you have filled out all the fields marked with *. If you have done that, contact your system administrator.')
         }
       }
     };
@@ -129,7 +129,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
         <br />
         <br />
 
-        <h2>Title</h2>
+        <h2>Title*</h2>
         <Form.Control
           type='text'
           aria-label='Title'
@@ -138,14 +138,14 @@ export const NoteComponent = ({ safeguarding }: Props) => {
           onChange={onChangeTitle}
         />
         <br />
-        <h2 >Information:</h2>
+        <h2 >Information*</h2>
         <SimpleMdeReact
           aria-label='Information - Textbox'
           onChange={onChangeNote}
           value={note}
           options={options}
         />
-        <h2>Actions to take:</h2>
+        <h2>Actions to take*</h2>
         <SimpleMdeReact
           aria-label='Actions - Textbox'
           onChange={onChangeAction}
@@ -155,7 +155,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
       </Col>
       <Row>
         <Col>
-          <Form.Label htmlFor='date' column>Date:</Form.Label>
+          <Form.Label htmlFor='date' column>Date*</Form.Label>
           <Form.Control
             id='date'
             type='date'
@@ -165,7 +165,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
           />
         </Col>
         <Col>
-          <Form.Label column htmlFor='involved'>People involved:</Form.Label>
+          <Form.Label column htmlFor='involved'>People involved*</Form.Label>
           <Form.Control
             id='involved'
             onChange={onChangeInvolved}
@@ -174,7 +174,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
             />
         </Col>
         <Col>
-          <Form.Label column htmlFor='dropdown-basic' aria-label='Urgency dropdown'>Urgency:</Form.Label>
+          <Form.Label column htmlFor='dropdown-basic' aria-label='Urgency dropdown'>Urgency*</Form.Label>
           <Dropdown>
             <Dropdown.Toggle
               variant='success'

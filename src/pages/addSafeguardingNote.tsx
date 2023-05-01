@@ -18,6 +18,7 @@ export default function AddNote () {
               If this is not the case, please add a regular note.
             </span>
           </p>
+          <h2>Please note - all fields are required.</h2>
           <NoteComponent safeguarding />
         </Container>
       }
