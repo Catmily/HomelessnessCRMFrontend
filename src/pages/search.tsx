@@ -12,7 +12,8 @@ import {
   GetDocumentsGeneric,
   GetKeysDB,
   GetNotesGeneric,
-  GetPeopleGeneric
+  GetPeopleGeneric,
+  GetUserProfile
 } from '../glue/DBConnector';
 import {
   caseFieldType,
@@ -75,7 +76,7 @@ export default function Search (): ReactElement<any, any> {
           <tr>
             <td>Case (ID: {caseId})</td>
             <td>{caObj[element].date}</td>
-            <td>{caObj[element].person}</td>
+            <td>ID: {caObj[element].person}</td>
             <td>{caObj[element].summary}</td>
             <td>
               <a
@@ -83,7 +84,7 @@ export default function Search (): ReactElement<any, any> {
                   (`/case/${caseId}`) as unknown as string
                 }
               >
-                Link (to case)
+                Link (to person case)
               </a>
             </td>
           </tr>
@@ -105,7 +106,7 @@ export default function Search (): ReactElement<any, any> {
           <tr>
             <td>{noteIdText}</td>
             <td>{noteObj[element][1].note_date}</td>
-            <td>{noteObj[element][1].person_id}</td>
+            <td>ID: {noteObj[element][1].person_id}</td>
             <td>{noteObj[element][1].title}</td>
             <td>
               <a
@@ -113,7 +114,7 @@ export default function Search (): ReactElement<any, any> {
                   (`/profile/${personId}`) as unknown as string
                 }
               >
-                Link (to profile)
+                Link (to person profile)
               </a>
             </td>
           </tr>
@@ -128,7 +129,7 @@ export default function Search (): ReactElement<any, any> {
           <tr>
             <td>Document (ID: {documentId})</td>
             <td>{docObj[element].date}</td>
-            <td>{docObj[element].person_id}</td>
+            <td>ID: {docObj[element].person_id}</td>
             <td>{docObj[element].title}</td>
             <td>
               <a
@@ -136,7 +137,7 @@ export default function Search (): ReactElement<any, any> {
                   (`/profile/${personId}`) as unknown as string
                 }
               >
-                Link (to profile)
+                Link (to person profile)
               </a>
             </td>
           </tr>
