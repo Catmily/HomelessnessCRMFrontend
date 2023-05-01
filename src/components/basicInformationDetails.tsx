@@ -154,7 +154,7 @@ export default function BasicInformationDetails ({
       const func = async () => {
         if (editMode) {
           let res;
-          if (checkRequiredFields) {
+          if (checkRequiredFields()) {
             res = await SetUserProfileAdd(userData);
           }
           if (editMode && res != null) {
