@@ -473,7 +473,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
   function SetCurrentSelectorList (): void {
     const nav: JSX.Element[] = [];
 
-    for (let i = 1; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       nav.push(pageSelectors[i + pageCurrentSelectorCount * 10]);
     }
     setCurrentSelector(nav);
@@ -604,7 +604,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
             </Nav>
             <PaginationWrapper
               value={pageCurrentSelectorCount}
-              totalPages={pageSelectors.length - 1}
+              totalPages={pages.length - 1}
               onChange={handlePagination}
               size='sm'
              />
