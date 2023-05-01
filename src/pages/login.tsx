@@ -78,9 +78,6 @@ export default function Login () {
           Register an Account
         </Button> */}
 
-        <Button variant='secondary' type='button' href='/' className='mx-auto'>
-          Return to Homepage
-        </Button>
       </Form>
     </Container>
   );
