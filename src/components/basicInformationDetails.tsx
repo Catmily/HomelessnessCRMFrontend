@@ -176,7 +176,6 @@ export default function BasicInformationDetails ({
             alert('Error: Could not set user profile.')
           }
         }
-        
         setFormEnabled(!formEnabled);
       };
       void func();
