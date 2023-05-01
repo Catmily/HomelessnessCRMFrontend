@@ -28,20 +28,18 @@ export default function Case () {
   const [selectedDropdown, setSelectedDropdown] = useState('');
   const [caseDetails, setCaseDetails] = useState();
   const [person, setPerson] = useState('');
-  // const [loaded, hasLoaded] = useState<boolean>(false);
   const [reallySure, showReallySure] = useState<boolean>(false);
   const navigate = useNavigate();
   const [errorWhy, setErrorWhy] = useState('');
 
   const handleDropdownSelect = (selected) => {
     setSelectedDropdown(selected);
-    console.log(`Selected value: ${selected}`);
   }
 
   useEffect(() => {
     const func = async (): Promise<void> => {
-      console.log(selectedDropdown);
       if (caseDetails && selectedDropdown !== '') {
+        // Track changes of the caseworker assignment dropdown
         try {
           await AddCaseWorkerToCase(selectedDropdown, caseDetails['case_id'])
           window.location.reload();
@@ -59,7 +57,6 @@ export default function Case () {
         const res = await GetFullCase(id);
         setCaseDetails(res['data']['message'][0][0]);
         setPerson(res['data']['message'][0][1]);
-        console.log(caseDetails);
       } catch (e) {
         setErrorWhy(`Cannot find the case that you're looking for!
                     Try searching for it if you are not assigned to it,
@@ -73,6 +70,7 @@ export default function Case () {
     return <FiveZeroZero howToResolve={errorWhy} container />
   }
 
+  // What we are doing here is splitting this into a tabbed layout
   return (
     <StandardLayout
       content={
@@ -106,6 +104,7 @@ export default function Case () {
                     </Nav.Item>
                     <Nav.Item>
                       {caseDetails
+                      // Data may have not loaded yet
                       // @ts-expect-error Type is fine
                         ? (caseDetails['case_workers'].length !== 0)
                             ? <>
@@ -198,6 +197,8 @@ export default function Case () {
                         <Container className={'shadow p-3'}>
                           {
                           (caseDetails !== undefined && isJWTCaseWorker())
+                          // Typescript is throwing here a weird error, because we checked if caseDetails
+                          // exists in that statement.
                           // @ts-expect-error Already checked
                             ? caseDetails['case_workers'].length === 0
                               ? <>
@@ -220,7 +221,9 @@ export default function Case () {
                           <Button
                             onClick={async () => {
                               try {
-                                // @ts-expect-error aaaa
+                                // Again, caseDetails might not exist, but by this point it's pretty certain
+                                // it does.
+                                // @ts-expect-error Type is fine.
                                 await WholePersonExport(caseDetails['person_id']);
                               } catch (e) {
                                 alert('Error: Cannot export person. Your action could not be completed.')

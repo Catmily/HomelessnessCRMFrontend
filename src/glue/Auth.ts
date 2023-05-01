@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
 import { isExpired, decodeToken } from 'react-jwt';
+
+// Checks if user has a JWT - used to check if authenticated
 
 export function hasJWT (): boolean {
   // ? flag=true : flag=false
@@ -17,6 +18,8 @@ export function hasJWT (): boolean {
   return valid;
 }
 
+// Used to decode JWT for further functions
+
 export function decodedToken (): any {
   const token = localStorage.getItem('access_token_cookie');
   if (token) {
@@ -29,6 +32,8 @@ export function decodedToken (): any {
 export function getTokenUser (): string {
   return decodedToken()['lgn'];
 }
+
+// Permissions system
 
 export function isJWTCaseWorker (): string {
   const role = decodedToken()['role_cw'];
@@ -61,7 +66,7 @@ export async function loginBackend (login: string, password: string): Promise<vo
 }
 
 export async function changePassword (c: string, pOne: string, pTwo: string): Promise<void> {
-  const res = await axios.put(
+  await axios.put(
     'https://homelesscrm.com/api/change-password',
     {
       login: getTokenUser(),
@@ -73,9 +78,8 @@ export async function changePassword (c: string, pOne: string, pTwo: string): Pr
   );
 }
 
-// an attempt was made to set a default header
-// it did not work
-// why is life so hard
+// Default header for some reason did not work
+// We just attach this to every request instead
 export function addTokenHeader (): Record<string, string> {
   return {
     Authorization: `Bearer ${localStorage.getItem('access_token_cookie')}`

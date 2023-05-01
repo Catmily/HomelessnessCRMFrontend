@@ -1,6 +1,8 @@
 import { Col, Row, Container } from 'react-bootstrap';
 
 export default function Footer () {
+  // Nothing special - though 'Report bug' is just
+  // emailing the developer :)
   return (
     <div className={'footer shadow'}>
       <Container className={'p-4'}>

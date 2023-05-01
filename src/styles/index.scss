@@ -170,31 +170,6 @@ body {
 
 
 
-@media screen and (max-width: 955px) {
-	#nav2 {
-		min-height: 60px !important;
-	}
-}
-
-@media screen and (max-width: 595px) {
-	.card-home {
-		min-height: 180px;
-		min-width: 180px;
-		padding: 10px;
-	}
-
-	.card-img-top {
-		vertical-align: bottom;
-		padding: 20px;
-		padding-top: 70px;
-	}
-
-	#nav2 {
-		min-height: 120px !important;
-	}
-}
-
-
 .card-dark {
 	background-color: hsl(137, 50%, 98%);
 }
@@ -257,4 +232,30 @@ a.btn:visited {
 
 .selected_dropdown {
 	background-color: #dadada;
+}
+
+// Responsive queries
+
+@media screen and (max-width: 955px) {
+	#nav2 {
+		min-height: 60px !important;
+	}
+}
+
+@media screen and (max-width: 595px) {
+	.card-home {
+		min-height: 180px;
+		min-width: 180px;
+		padding: 10px;
+	}
+
+	.card-img-top {
+		vertical-align: bottom;
+		padding: 20px;
+		padding-top: 70px;
+	}
+
+	#nav2 {
+		min-height: 120px !important;
+	}
 }

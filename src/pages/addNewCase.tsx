@@ -8,7 +8,6 @@ import { FiveZeroZero } from './500';
 
 export function AddNewCase () {
   const { id } = useParams();
-  // const [person, setPerson] = useState<unknown>();
   const [personName, setPersonName] = useState('');
   const [errorWhy, setErrorWhy] = useState('');
 
@@ -25,7 +24,6 @@ export function AddNewCase () {
 
         setPersonName(res['data']['message'][0]['preferred_name']);
       } catch (e) {
-        console.log('errowo')
         setErrorWhy(`It appears that
         you are trying to add a case, but the system does not
         know what profile you are attaching it to.`)

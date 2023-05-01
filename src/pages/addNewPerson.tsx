@@ -4,9 +4,6 @@ import { type ReactElement } from 'react';
 import BasicInformationDetails from '../components/basicInformationDetails';
 
 export function AddNewPerson (): ReactElement<any, any> {
-  // const [person, setPerson] = useState<unknown>();
-  // const [personName, setPersonName] = useState('');
-
   return (
     <StandardLayout
       content={

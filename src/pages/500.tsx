@@ -7,6 +7,10 @@ interface Props {
   container: boolean
 }
 
+// howToResolve is useful for us to tell the user what went wrong
+// whereas container helps us to show some errors inline, so that
+// the user experience is not completely disrupted
+
 export const Content = ({ howToResolve }: Props): ReactElement<any, any> => {
   return (<Container className='p-4 main-content shadow align-center'>
     <img height='150px' src={require('../assets/500.webp')} />

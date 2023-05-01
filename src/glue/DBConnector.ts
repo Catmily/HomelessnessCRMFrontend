@@ -5,6 +5,14 @@ import axios, { type AxiosResponse } from 'axios';
 import fileDownload from 'js-file-download';
 import { addTokenHeader } from './Auth';
 
+// The majority of these are in the style of
+// Get JSON
+// Get JWT
+// Push it through
+// Some may return values such as true or false, but mostly
+// the error correction is handled by the rest of the UI through
+// exceptions
+
 export async function RegisterAccount (
   login: string,
   email: string,
@@ -302,6 +310,7 @@ export async function GetDocument (documentID: string): Promise<void> {
     { document_id: documentID },
     { headers: addTokenHeader(), responseType: 'blob' }
   );
+  // Handy import that abstracts away most of the annoying Javascript downloading stuff
 
   fileDownload(
     res['data'],
@@ -357,6 +366,9 @@ export async function WholePersonExport (personId: string): Promise<AxiosRespons
     { person_id: personId },
     { headers: addTokenHeader(), responseType: 'blob' }
   );
+
+  // Handy import that abstracts away most of the annoying Javascript downloading stuff
+
   fileDownload(
     res['data'],
     res['headers']['content-disposition'].replace('attachment; filename=', '')

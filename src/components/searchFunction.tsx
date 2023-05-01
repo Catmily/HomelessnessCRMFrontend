@@ -11,12 +11,10 @@ interface Props {
 }
 
 function SearchPerson ({ staffOnly, dropdownSelect }: Props) {
+  // This is the drop down that displays when selecting a caseworker
   const [menuItems, setMenuItems] = useState<JSX.Element[]>([]);
   const [people, setPeople] = useState([]);
   const [changed, setChanged] = useState(true);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [changedSelection, setChangedSelection] = useState(false);
 
   const [searchBox, setSearchBox] = useState('');
   const [selectedPersonDesc, setSelectedPersonDesc] = useState(
@@ -30,6 +28,8 @@ function SearchPerson ({ staffOnly, dropdownSelect }: Props) {
       const func = async () => {
         let ppl;
         if (searchBox !== '') {
+          // This can be used both for ordinary people, and staff members
+          // Ordinary people is WIP, extension possibility to 'involved' in Notes
           if (staffOnly) {
             ppl = await GetCaseWorkersGeneric({ preferred_name: searchBox });
           } else {
@@ -76,6 +76,11 @@ function SearchPerson ({ staffOnly, dropdownSelect }: Props) {
     const func = async () => {
       const e = [];
 
+      // Positively evil code - this iterates through the request
+      // and allows for multiple selections of users
+      // This is overbuilt code - our implementation only allows for
+      // single caseworker selection
+
       // eslint-disable-next-line @typescript-eslint/no-for-in-array
       for (const p in people) {
         e.push(
@@ -111,7 +116,6 @@ function SearchPerson ({ staffOnly, dropdownSelect }: Props) {
     const func = async () => {
       const l = selectedPersonId.length;
       setSelectedPersonDesc(`${l} people selected`);
-      setChangedSelection(false);
     };
     void func();
   }, [selectedPersonId]);

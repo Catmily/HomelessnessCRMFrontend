@@ -69,15 +69,6 @@ export default function Login () {
           🔓 Login to Homeless Check
         </Button>
 
-        {/* <Button
-          variant='secondary'
-          type='button'
-          href='/register'
-          className='mx-2'
-        >
-          Register an Account
-        </Button> */}
-
       </Form>
     </Container>
   );
@@ -149,6 +140,9 @@ export function ChangePassword () {
 
         <Button
           onClick={async () => {
+            // Validation
+            // Regex from
+            // https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
             if (passwordOne !== passwordTwo) {
               alert('Passwords are not the same!')
             }
@@ -252,8 +246,6 @@ export function Register () {
           type='button'
           className='mx-auto'
           onClick={async () => {
-            // https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
-            // appropriate regex
             if (!password.match('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')) {
               alert('Password not strong enough!')
             }

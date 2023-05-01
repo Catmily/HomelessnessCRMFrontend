@@ -1,3 +1,6 @@
+// Fancy types for fields in cases and searches
+// Why are they not actually types? Complete mystery.
+
 export const caseFieldType = {
   accommodation_status: 'Accommodation Status',
   benefits_notes: 'Benefits',

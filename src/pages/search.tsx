@@ -58,8 +58,6 @@ export default function Search (): ReactElement<any, any> {
 
   useEffect(() => {
     if (searchObjects) {
-      // dot notation not appropriate
-
       const caObj = searchObjects['case'];
       const noteObj = searchObjects['note'];
       const docObj = searchObjects['document'];
@@ -71,6 +69,11 @@ export default function Search (): ReactElement<any, any> {
       const tempDocument = [];
       for (const element in caObj) {
         const caseId = caObj[element].case_id;
+
+        // To clarify 'unknown as string', this is because
+        // It's a request coming in from somewhere (so no type), but we can't
+        // just turn it into a string directly
+
         tempCase.push(
           <tr>
             <td>Case (ID: {caseId})</td>
@@ -90,6 +93,10 @@ export default function Search (): ReactElement<any, any> {
         );
       }
       for (const element in noteObj) {
+        // We use our outer join here
+        // the benefit is that we can now show both
+        // safeguarding note IDs, and note IDs
+        // which tells the user if they're both or one of them
         const noteId = noteObj[element][1]['note_id'];
         const personId = noteObj[element][1]['person_id'];
 
@@ -213,6 +220,8 @@ export default function Search (): ReactElement<any, any> {
           alert('Error in search. Please check your query and try again.')
         }
 
+        // ESLint optimisation
+
         setSearchObjects((prevState) => ({
           ...prevState,
           case: caseRes || [],
@@ -232,8 +241,12 @@ export default function Search (): ReactElement<any, any> {
   ): void => {
     const { name, value } = event.target;
 
-    const s = name.split('|');
+    // We assign IDs based off what the box is
+    // All these boxes are dynamically generated
+    // To allow for easier future changes of
+    // fields in the DB
 
+    const s = name.split('|');
     const type = s[1];
     const fieldName = s[0];
     if (s[2] !== 'field') {
@@ -264,7 +277,7 @@ export default function Search (): ReactElement<any, any> {
         ]);
         const data = res.data.models;
 
-        // remove id fields
+        // Remove id fields - who wants to search by ID?
 
         for (const key in data) {
           data[key] = data[key].filter((item: string | string[]) => !item.includes('_id'));
@@ -357,7 +370,7 @@ export default function Search (): ReactElement<any, any> {
   }
 
   useEffect(() => {}, [searchElements]);
-
+  // Add boxes to search elements dynamically
   function setBoxes (type: string): void {
     const b = keys[type];
     setSearchElements((prevState) => ({

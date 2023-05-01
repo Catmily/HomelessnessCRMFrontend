@@ -12,6 +12,7 @@ interface Props {
 export function Profile ({ self, hasCase }: Props): ReactElement<any, any> {
   let { id } = useParams();
 
+  // If it's yourself, then you aren't going to come in with a ID in the routing
   if (self) {
     id = getPersonId();
   }

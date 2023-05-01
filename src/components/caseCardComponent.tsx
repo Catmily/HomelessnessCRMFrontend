@@ -10,6 +10,7 @@ interface Props {
   summary: string
 }
 
+// Render cards when staff are shown cases
 export default function CaseCardComponent ({
   name,
   caseId,

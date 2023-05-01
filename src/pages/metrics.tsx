@@ -59,6 +59,8 @@ export default function Metrics (): ReactElement<any, any> {
       timestampsRaw.push(obj[field]);
     });
 
+    // This allows for granular date selections - this is a pretty rough
+    // way of doing it, but here we can split per day, per month, and per year.
     const casesTimestamped = [];
     timestampsRaw.forEach((timestamp) => {
       let date;
@@ -80,11 +82,13 @@ export default function Metrics (): ReactElement<any, any> {
           casesTimestamped[date] = 0;
         }
 
-        // wtf?
+        // Typescript just being typescript, we're adding to a number!
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         casesTimestamped[date] += 1;
       } catch (e) {}
     });
+
+    // Workaround as Recharts requires a very specific [{ object }, { object }] format
     const data = []
 
     Object.entries(casesTimestamped).forEach(([date, amount]) => {
@@ -94,6 +98,8 @@ export default function Metrics (): ReactElement<any, any> {
       };
       data.push(outputObj);
     });
+
+    // Chronological order
     data.sort(function (a, b) {
       return a.date - b.date;
     });

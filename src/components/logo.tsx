@@ -1,5 +1,9 @@
 import React from 'react';
 
+// A SVG logo converted to a JSX component
+// This isn't really code, just a SVG file in a
+// rather cursed format for React to like it
+
 export default function Icon (): JSX.Element {
   return (
     <a href='/'>

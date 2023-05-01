@@ -23,6 +23,7 @@ export default function NavBar (): JSX.Element {
 
           <Nav className='me-auto'>
             {isJWTCaseWorker()
+            // Permission systems
               ? (
                 <Nav.Link href='/cases'>Cases</Nav.Link>
                 )
@@ -61,6 +62,7 @@ export default function NavBar (): JSX.Element {
 }
 
 export function SecondNavBarTime (): JSX.Element {
+  // This is the smaller bar that displays the user and the time
   const [time, setTime] = useState(currentNavBarTime());
 
   useEffect(() => {

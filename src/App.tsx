@@ -32,6 +32,7 @@ import { AddNewPerson } from './pages/addNewPerson'
 import FourOhThree from './pages/403'
 axios.defaults.withCredentials = true
 
+// Wrapper JSX component to check for permissions while routing
 export const AuthenticatedRoute = (props: any): ReactElement<any, any> => {
   const role = props.role
   if (!hasJWT()) {
@@ -58,7 +59,7 @@ export const AuthenticatedRoute = (props: any): ReactElement<any, any> => {
   return props.children ? props.children : <Outlet />
 }
 
-// because nobody cares
+// If you're logged out, who cares about types?
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function LogoutComponent () {
   const navigate = useNavigate()
@@ -70,6 +71,7 @@ export function LogoutComponent () {
   return <></>
 }
 
+// Logout by removing the JWT token from the browser and the server
 export async function Logout (): Promise<boolean> {
   await axios.put(
     'https://homelesscrm.com/api/logout',
@@ -80,6 +82,8 @@ export async function Logout (): Promise<boolean> {
   return true
 }
 
+// We use :id as a param in order to get what user the
+// staff member wants to look at/change.
 function App (): ReactElement<any, any> {
   return (
     <Routes>

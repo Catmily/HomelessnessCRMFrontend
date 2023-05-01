@@ -1,3 +1,5 @@
+// A simple function to show the current time in the navbar
+
 export function currentNavBarDate (): string {
   const days = [
     'Sunday',

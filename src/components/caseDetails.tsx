@@ -67,6 +67,9 @@ export function CaseDetails ({ caseDetails, editMode = false }: Props): ReactEle
       <>
         <Form.Label column>
           {
+            // Give them suitable IDs when the dropdown is displayed
+            // for what fields to select
+            // Also, pretty type rendering
             caseFieldType[
               name.replace('_dropdown', '') as keyof typeof caseFieldType
             ]
@@ -127,6 +130,7 @@ export function CaseDetails ({ caseDetails, editMode = false }: Props): ReactEle
               ? (
                   value
                     ? (
+                      // Pretty type rendering
                       <>
                         <Form.Label column htmlFor={caseFieldType[key as keyof typeof caseFieldType]}>
                           {caseFieldType[key as keyof typeof caseFieldType]}
@@ -183,6 +187,7 @@ export function CaseDetails ({ caseDetails, editMode = false }: Props): ReactEle
                   className={'float-end mx-0'}
                   onClick={() => {
                     setFormEnabled(!formEnabled);
+                    // Reset case forms using JQuery
                     // @ts-expect-error JQuery
                     $('#case')[0].reset();
                     setNewFields([]);
@@ -206,6 +211,9 @@ export function CaseDetails ({ caseDetails, editMode = false }: Props): ReactEle
                   {Object.entries(caseFieldType)
                     .filter(filterDropdown)
                     .map(([key, value]) => (
+                      // This allows us to show appropriate fields
+                      // for adding, which aren't already present,
+                      // in a pretty format
                       // eslint-disable-next-line react/jsx-key
                       <Dropdown.Item
                         onClick={addFields}
@@ -328,6 +336,8 @@ export function DocumentList ({ caseDetails }: Props) {
   }, [documents]);
 
   useEffect(() => {
+  // Pagination related things
+  // Work out how many pages, what pages to display, what is being displayed
     SetCurrentPage();
   }, [pages]);
 
@@ -355,12 +365,14 @@ export function DocumentList ({ caseDetails }: Props) {
     setFilePath(value);
 
     const file = event.target.files[0];
-    // @ts-expect-error aaaa
+    // @ts-expect-error Type checking, but we're pretty sure they're blobs
+    // of some description.
     setFile(file);
   };
 
   useEffect(() => {
     const func = async () => {
+      // Remove file path seperators from file path
       const fileName = filePath.replace(/^.*[\\\\/]/, '');
       await UploadDocument(file, {
         title: fileName,
@@ -446,6 +458,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
   }
 
   async function getNotes () {
+    // We reuse the component on both safeguarding notes and regular notes
     try {
       let noteResponse;
       if (safeguarding) {
@@ -486,6 +499,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
       const entries = Object.entries(notes);
 
       for (let i = 0; i < entries.length; i++) {
+        // To avoid conflicts we give the safeguarding ones a different ID
         nav.push(
           <Nav.Item>
             <Nav.Link eventKey={safeguarding ? `ps${i}` : `p${i}`}>

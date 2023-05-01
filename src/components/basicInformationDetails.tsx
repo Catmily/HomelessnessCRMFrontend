@@ -31,10 +31,6 @@ interface Props {
   editMode: boolean
 }
 
-// interface FormState {
-//     [key: string]: string;
-//   }
-
 export default function BasicInformationDetails ({
   user,
   editMode = false
@@ -60,7 +56,6 @@ export default function BasicInformationDetails ({
   const [errorWhy, setErrorWhy] = useState('');
 
   const handleClose = () => { setNukeModalShow(false); };
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,6 +82,7 @@ export default function BasicInformationDetails ({
 
             setIsLoaded(true);
           } catch (e) {
+            // This will throw a 'client side 500' if it can't find the profile
             setErrorWhy(`Could not load user profile. Something has gone terribly wrong. 
             Does this person actually exist?`)
           }
@@ -95,6 +91,8 @@ export default function BasicInformationDetails ({
     };
     void func();
   }, []);
+
+  // Event Handlers
 
   const handleChangeBasic = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -123,6 +121,8 @@ export default function BasicInformationDetails ({
     }));
   };
 
+  // Validate profile fields
+
   function checkRequiredFields (): boolean {
     if (userData != null) {
       if (userData['preferred_name'] == null || userData['prefered_name'] === '') {
@@ -150,6 +150,7 @@ export default function BasicInformationDetails ({
   }
 
   useEffect(() => {
+    // Two things going on - edit mode (add profile), and non-edit mode (change profile)
     if (changed) {
       const func = async () => {
         if (editMode) {
@@ -179,6 +180,7 @@ export default function BasicInformationDetails ({
   }, [changed]);
 
   if (errorWhy !== '') {
+    // if thrown error, show error
     return <FiveZeroZero howToResolve={errorWhy} container={false} />
   }
 
@@ -225,6 +227,7 @@ export default function BasicInformationDetails ({
                       setUserData(userDataCopy);
                       setUserDataCopySensitive(userDataCopySensitive);
 
+                      // Reset the form using JQuery
                       // @ts-expect-error JQuery nonsense
                       $('#form')[0].reset();
                       // @ts-expect-error More JQuery nonsense
@@ -276,6 +279,8 @@ export default function BasicInformationDetails ({
                   placeholder='Preferred Name'
                   onChange={handleChangeBasic}
                   defaultValue={userData.preferred_name || ''}
+
+                  // Bootstrap validation
                   isInvalid={(userData['preferred_name'] != null) ? userData['preferred_name'].length > 30 : false}
 
                   />
@@ -474,7 +479,6 @@ export default function BasicInformationDetails ({
                             <Button
                               variant='warning'
                               onClick={() => {
-                                console.log(userId);
                                 navigate(`/case/add/${userId}`);
                               }}
                               className='w-100 float-end'
@@ -489,6 +493,8 @@ export default function BasicInformationDetails ({
                         )}
 
                     {
+                    // Stops yourself from being able to delete your own
+                    // profile
                     // eslint-disable-next-line eqeqeq
                     isJWTSupervisor() && userId != '1'
                       ? (
