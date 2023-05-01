@@ -151,30 +151,17 @@ export default function BasicInformationDetails ({
 
   useEffect(() => {
     if (changed) {
-      if (checkRequiredFields()) {
-        setChanged(false);
-        return;
-      }
       const func = async () => {
         if (editMode) {
-          let res;
-          if (checkRequiredFields()) {
-            res = await SetUserProfileAdd(userData);
-          } else {
-            return false;
-          }
+          const res = await SetUserProfileAdd(userData);
           if (editMode && res != null) {
             const rowId = res.data.row_id;
             navigate(`/profile/${rowId}`);
           }
         } else {
           try {
-            if (checkRequiredFields()) {
-              await SetUserProfile(userData);
-              await SetPersonSensitiveProfile(userDataSensitive);
-            } else {
-              return;
-            }
+            await SetUserProfile(userData);
+            await SetPersonSensitiveProfile(userDataSensitive);
           } catch (e) {
             alert('Error: Could not set user profile.')
           }
@@ -182,6 +169,10 @@ export default function BasicInformationDetails ({
         setChanged(false);
         setFormEnabled(!formEnabled);
       };
+      if (checkRequiredFields()) {
+        setChanged(false);
+        return;
+      }
       void func();
     }
   }, [changed]);
