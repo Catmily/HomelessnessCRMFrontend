@@ -488,7 +488,9 @@ export default function BasicInformationDetails ({
                         <></>
                         )}
 
-                    {isJWTSupervisor() && userId !== '1'
+                    {
+                    // eslint-disable-next-line eqeqeq
+                    isJWTSupervisor() && userId != '1'
                       ? (
                         <Col>
                           <Button
