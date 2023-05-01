@@ -69,14 +69,14 @@ export default function Login () {
           🔓 Login to Homeless Check
         </Button>
 
-        <Button
+        {/* <Button
           variant='secondary'
           type='button'
           href='/register'
           className='mx-2'
         >
           Register an Account
-        </Button>
+        </Button> */}
 
         <Button variant='secondary' type='button' href='/' className='mx-auto'>
           Return to Homepage
