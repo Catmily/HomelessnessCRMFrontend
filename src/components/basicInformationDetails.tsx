@@ -245,8 +245,8 @@ export default function BasicInformationDetails ({
                   variant='danger'
                   className={'w-100'}
                   onClick={() => {
-                    setFormEnabled(!formEnabled);
                     setChanged(true);
+                    setFormEnabled(!formEnabled);
                   }}
                 >
                   📥 Submit
