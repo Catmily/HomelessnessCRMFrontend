@@ -58,7 +58,8 @@ export const noteType = {
   priority: 'Priority',
   note: 'Note',
   incident_date: 'Incident Date',
-  note_id: 'Note Date',
+  involved: 'Involved',
+  note_date: 'Note Date',
   actions_to_take: 'Actions to Take',
   actions_taken: 'Actions Taken'
 };
