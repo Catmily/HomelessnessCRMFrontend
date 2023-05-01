@@ -46,7 +46,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
           const caseWorkerId = getPersonId();
           const res = await AddNote({
             person_id: id,
-            caseWorkerId,
+            case_worker_id: caseWorkerId,
             note,
             title,
             involved,
