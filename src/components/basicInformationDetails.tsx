@@ -125,23 +125,23 @@ export default function BasicInformationDetails ({
 
   function checkRequiredFields (): boolean {
     if (userData != null) {
-      if (userData['preferred_name'] == null) {
+      if (userData['preferred_name'] == null || userData['prefered_name'] === '') {
         alert('Please enter a preferred name.')
         return false
       }
-      if (userData['city'] == null) {
+      if (userData['city'] == null || userData['city'] === '') {
         alert('Please enter a city. If NFA, the nearest one, or the office.')
         return false
       }
-      if (userData['postcode'] == null) {
+      if (userData['postcode'] == null || userData['postcode'] === '') {
         alert('Please enter a postcode. If NFA, the nearest one, or the office.')
         return false
       }
-      if (userData['pronouns'] == null) {
+      if (userData['pronouns'] == null || userData['pronouns'] === '') {
         alert('Please enter the person\'s pronouns. If unknown, write N/A.')
         return false
       }
-      if (userData['first_language'] == null) {
+      if (userData['first_language'] == null || userData['first_language'] === '') {
         alert('Please enter the person\'s first language. If unknown, assume English.')
         return false
       }
