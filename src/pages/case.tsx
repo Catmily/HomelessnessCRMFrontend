@@ -83,7 +83,7 @@ export default function Case () {
               person['preferred_name']
             }
           </h1>{' '}
-          <Button size='sm' href={`/profile/${id}`}>
+          <Button size='sm' href={`/profile/${person['person_id']}`}>
             Go to Client Profile
           </Button>
           <Button size='sm' className='ms-2' href={`/safeguarding/user/add/${id}`}>Make Safeguarding Note</Button>
