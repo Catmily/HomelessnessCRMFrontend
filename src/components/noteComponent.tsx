@@ -12,13 +12,13 @@ import {
   GetUserProfile
 } from '../glue/DBConnector';
 // import SearchPerson from './searchFunction';
-const navigate = useNavigate()
 
 interface Props {
   safeguarding: boolean
 }
 
 export const NoteComponent = ({ safeguarding }: Props) => {
+  const navigate = useNavigate()
   const [note, setNote] = useState('');
   const [action, setAction] = useState('');
   const [person, setPerson] = useState(Object);
@@ -67,7 +67,6 @@ export const NoteComponent = ({ safeguarding }: Props) => {
           }
 
           navigate(`/profile/${id}`);
-
         } catch (e) {
           alert('Error: Your note could not be submitted.')
         }
