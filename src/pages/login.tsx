@@ -160,13 +160,22 @@ export function ChangePassword () {
 
             if (passwordOne === '' || passwordTwo === '') {
               alert('Passwords cannot be blank!')
+              return;
             }
             if (!passwordOne.match('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')) {
               alert('Password not strong enough!')
-
-              await changePassword(currentPassword, passwordOne, passwordTwo);
+              return;
             }
-          }}
+
+            try {
+              await changePassword(currentPassword, passwordOne, passwordTwo);
+            } catch (e) {
+              alert('Cannot change password. An error has occured.')
+              return
+            }
+            alert('Password changed.')
+          }
+          }
           variant='primary'
           type='button'
           className='mx-auto'
@@ -259,16 +268,18 @@ export function Register () {
           onClick={async () => {
             if (!password.match('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')) {
               alert('Password not strong enough!')
+              return;
             }
             if (login === '') {
               alert('User cannot be blank!')
+              return;
             }
 
             try {
               await RegisterAccount(login, email, password);
               alert('Account registered.')
             } catch (e) {
-              alert("Can't register account. You have not been registered.")
+              alert("Can't register account. The user has not been registered.")
             }
           }}
         >
