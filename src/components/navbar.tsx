@@ -20,6 +20,19 @@ export default function NavBar (): JSX.Element {
           <Navbar.Brand>
             <Icon />
           </Navbar.Brand>
+          
+          <NavDropdown
+            title='User'
+            id='collasible-nav-dropdown'
+            className='navbar-nav-dropdown'
+        >
+            <NavDropdown.Item href='/profile'>Profile</NavDropdown.Item>
+            <NavDropdown.Item href='/profile/change-password'>
+              Change Password
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item href='/logout'>Logout</NavDropdown.Item>
+          </NavDropdown>
 
           <Nav className='me-auto'>
             {isJWTCaseWorker()
@@ -42,19 +55,6 @@ export default function NavBar (): JSX.Element {
                 <></>
                 )}
           </Nav>
-
-          <NavDropdown
-            title='User'
-            id='collasible-nav-dropdown'
-            className='navbar-nav-dropdown'
-        >
-            <NavDropdown.Item href='/profile'>Profile</NavDropdown.Item>
-            <NavDropdown.Item href='/profile/change-password'>
-              Change Password
-            </NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href='/logout'>Logout</NavDropdown.Item>
-          </NavDropdown>
         </Navbar.Collapse>
 
       </Container>
