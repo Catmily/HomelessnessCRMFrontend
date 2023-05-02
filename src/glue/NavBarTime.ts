@@ -13,7 +13,7 @@ export function currentNavBarDate (): string {
   const time = new Date();
   const dayWord = days[time.getDay()];
   const day = String(time.getDate()).padStart(2, '0');
-  const month = String(time.getMonth()).padStart(2, '0');
+  const month = String(time.getMonth() + 1).padStart(2, '0');
   const year = String(time.getFullYear());
 
   return `${dayWord} | ${day}/${month}/${year}`;

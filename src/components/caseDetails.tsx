@@ -28,7 +28,7 @@ import {
 } from '../glue/DBConnector';
 import { useNavigate } from 'react-router-dom';
 import { getPersonId, isJWTSupervisor } from '../glue/Auth';
-import { caseFieldType } from '../glue/typeTranslation';
+import { caseFieldType, priorityType } from '../glue/typeTranslation';
 import { FiveZeroZero } from '../pages/500';
 
 interface Props {
@@ -466,8 +466,10 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
       } else {
         noteResponse = await GetPersonNotes(caseDetails['person_id']);
       }
-      if (noteResponse['data'] !== undefined) {
-        setNotes(noteResponse['data']['message']);
+      const notes = noteResponse['data']['message'];
+      if (notes !== undefined) {
+        // Chronological order
+        setNotes(notes.reverse());
       }
     } catch (e) {
       setErrorWhy('Unable to grab notes. Unsure why.')
@@ -505,6 +507,9 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
             <Nav.Link eventKey={safeguarding ? `ps${i}` : `p${i}`}>
               {entries[i][1].title}
               <p>Date: {new Date(entries[i][1].note_date).toLocaleString()} </p>
+              <p>Priority:
+                {priorityType[(entries[i][1].priority) as keyof typeof priorityType]}
+                ] </p>
             </Nav.Link>
           </Nav.Item>
         );
@@ -528,6 +533,11 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
                 <h3>
                   {' '}
                   <span className='bold'>Involved:</span> {entries[i][1].involved}
+                </h3>
+
+                <h3>
+                  {' '}
+                  <span className='bold'>Priority:</span> {priorityType[(entries[i][1].priority) as keyof typeof priorityType]}
                 </h3>
 
                 <h3>
