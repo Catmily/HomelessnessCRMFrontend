@@ -122,8 +122,9 @@ h6 {
 }
 
 .fileCard {
-	min-width: 250px;
+	min-width: 200px;
 	min-height: 200px;
+	max-width: 33%;
 }
 
 @keyframes fadeInOpacity {
@@ -190,6 +191,7 @@ body {
 a {
 	color: #272c28 !important;
 	text-decoration: none;
+	white-space: pre-wrap;
 }
 
 a:hover {
