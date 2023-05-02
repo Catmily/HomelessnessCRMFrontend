@@ -435,7 +435,6 @@ export function DocumentList ({ caseDetails }: Props) {
         value={currentPageNumber}
         totalPages={Math.floor(pages.length / 10) + 1}
         onChange={handlePagination}
-        size='lg'
        />
       <br />
     </Container>
@@ -632,7 +631,6 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
               className='mt-3 mb-3'
               totalPages={Math.floor(pageSelectors.length / 10) + 1}
               onChange={handlePagination}
-              size='lg'
               width='100%'
              />
           </Col>
