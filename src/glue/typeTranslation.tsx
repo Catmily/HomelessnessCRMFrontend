@@ -23,10 +23,10 @@ export const caseFieldType = {
   relationship_notes: 'Relationship Status',
   substance_use: 'Substance Use',
   summary: 'Case Summary',
-  start_date: 'Start Date',
-  proposed_end_date: 'Proposed End Date',
-  actual_end_date: 'Actual End Date',
-  last_update: 'Last Updated',
+  start_date: 'Start Date (Date/Time ONLY)',
+  proposed_end_date: 'Proposed End Date (Date/Time Only)',
+  actual_end_date: 'Actual End Date (Date/Time ONLY)',
+  last_update: 'Last Updated (Date/Time ONLY)',
   support_networks: "Clients' Support Networks"
 };
 
