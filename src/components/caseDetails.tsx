@@ -429,12 +429,13 @@ export function DocumentList ({ caseDetails }: Props) {
       </Row>
 
       <Container className='d-flex flex-wrap'>{currentPageElements}</Container>
-      <br />
+
       <PaginationWrapper
+        className='mt-3 mb-3'
         value={currentPageNumber}
         totalPages={Math.floor(pages.length / 10) + 1}
         onChange={handlePagination}
-        size='sm'
+        size='lg'
        />
       <br />
     </Container>
@@ -610,7 +611,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
 
               { !safeguarding ? <Button
                 size='sm'
-                className='float-end'
+                className='float-end mt-3 mb-3'
                 onClick={() => {
                   navigate(`/note/user/${caseDetails['person_id']}`);
                 }}
@@ -618,21 +619,21 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
                 📄 Add Note
               </Button> : <Button
                 size='sm'
-                className='float-end'
+                className='float-end mt-3 mb-3'
                 onClick={() => {
                   navigate(`/safeguarding/user/add/${caseDetails['person_id']}`);
                 }}
               >
                 📄 Add Safeguarding Note
               </Button>}
-              <br />
-              <br />
             </Nav>
             <PaginationWrapper
               value={pageCurrentSelectorCount}
+              className='mt-3 mb-3'
               totalPages={Math.floor(pageSelectors.length / 10) + 1}
               onChange={handlePagination}
-              size='sm'
+              size='lg'
+              width='100%'
              />
           </Col>
           <Col sm={9}>
