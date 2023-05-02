@@ -24,7 +24,7 @@ export const caseFieldType = {
   substance_use: 'Substance Use',
   summary: 'Case Summary',
   start_date: 'Start Date (Date/Time ONLY)',
-  proposed_end_date: 'Proposed End Date (Date/Time Only)',
+  proposed_end_date: 'Proposed End Date (Date/Time ONLY)',
   actual_end_date: 'Actual End Date (Date/Time ONLY)',
   last_update: 'Last Updated (Date/Time ONLY)',
   support_networks: "Clients' Support Networks"
