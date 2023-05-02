@@ -194,6 +194,11 @@ a {
 	white-space: pre-wrap !important;
 }
 
+.navbar-nav .dropdown-menu-right {
+	transform: translateX(calc(50% - 50vw + 100%));
+  }
+  
+
 a:hover {
 	color: #2b352d;
 }
