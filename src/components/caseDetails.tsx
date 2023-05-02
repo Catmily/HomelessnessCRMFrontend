@@ -400,33 +400,17 @@ export function DocumentList ({ caseDetails }: Props) {
       <Form>
         <Form.Label htmlFor='document-file' className='m-2'>📥 Upload Document: </Form.Label>
         <Form.Control
-          className='w-100 p-2'
+          className='w-100 p-3 m-3'
           name='document-file'
           type='file'
           id='document-file'
           onChange={uploadFileChange}
         />
       </Form>
-      <p>Allowed extensions are: jpg, jpeg, txt, rtf, doc, docx, webp,
+      <p className='p-3 m-3'>Allowed extensions are: jpg, jpeg, txt, rtf, doc, docx, webp,
         odt, ods, fodt, fods, odp, fodp, xls, xlsx,
         ppt, pptx, pdf, zip, zipx, rar, 7z, png, gif,
         mp3, wav, wma, flac, mp4, m4a, m4v, avi, webm, ogg, webp, svg</p>
-
-      <Row className='p-2'>
-        <Col>
-          <br />
-        </Col>
-        <Col>
-          {' '}
-          <Dropdown>
-            <Dropdown.Menu>
-              <Dropdown.Item href='#/action-1'>Action</Dropdown.Item>
-              <Dropdown.Item href='#/action-2'>Another action</Dropdown.Item>
-              <Dropdown.Item href='#/action-3'>Something else</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
 
       <Container className='d-flex flex-wrap'>{currentPageElements}</Container>
 
