@@ -34,6 +34,15 @@ export default function Login () {
     []
   );
 
+  const onKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      const func = async () => {
+        await onLogin();
+      }
+      void func();
+    }
+  }
+
   return (
     <Container fluid className={'login-content fade-in'}>
       <Form className={'login-dialog shadow'}>
@@ -47,6 +56,7 @@ export default function Login () {
             type='text'
             placeholder='Enter your username...'
             onChange={onChangeLogin}
+            onKeyDown={onKeyDown}
           />
         </Form.Group>
 
@@ -56,6 +66,7 @@ export default function Login () {
             id='password'
             type='password'
             placeholder='Enter your password...'
+            onKeyDown={onKeyDown}
             onChange={onChangePassword}
           />
         </Form.Group>
