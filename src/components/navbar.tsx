@@ -20,7 +20,7 @@ export default function NavBar (): JSX.Element {
           <Navbar.Brand>
             <Icon />
           </Navbar.Brand>
-          
+
           <NavDropdown
             title='User'
             id='collasible-nav-dropdown'
