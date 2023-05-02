@@ -11,6 +11,7 @@ import {
   AddSafeguardingNote,
   GetUserProfile
 } from '../glue/DBConnector';
+import { priorityType } from '../glue/typeTranslation';
 // import SearchPerson from './searchFunction';
 
 interface Props {
@@ -111,7 +112,7 @@ export const NoteComponent = ({ safeguarding }: Props) => {
   }, []);
 
   function changePriority (priority: number) {
-    setPriorityDesc(`Priority: ${priority}`);
+    setPriorityDesc(`Priority: ${priorityType[(priority) as keyof typeof priorityType]}`);
     setPriority(priority);
   }
 
