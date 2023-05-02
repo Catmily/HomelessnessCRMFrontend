@@ -47,7 +47,7 @@ export default function NavBar (): JSX.Element {
         <NavDropdown
           title='User'
           id='collasible-nav-dropdown'
-          className='my-auto dropdown-menu-end'
+          className='my-auto dropdown-menu-start'
         >
           <NavDropdown.Item href='/profile'>Profile</NavDropdown.Item>
           <NavDropdown.Item href='/profile/change-password'>
