@@ -157,11 +157,8 @@ export default function BasicInformationDetails ({
         if (editMode) {
           const res = await SetUserProfileAdd(userData);
           if (editMode && res != null) {
-            // But it's defined above!
-            // @ts-expect-error Shut upppp!
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             const rowId = res.data.row_id;
-            const res = await CreatePersonSensitive(rowId)
+            await CreatePersonSensitive(rowId)
             navigate(`/profile/${rowId}`);
           }
         } else {
