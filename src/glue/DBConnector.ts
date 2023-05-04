@@ -134,6 +134,16 @@ export async function GetPersonSensitive (personId?: string): Promise<AxiosRespo
   return res;
 }
 
+export async function CreatePersonSensitive (personId?: string): Promise<AxiosResponse<any, any>> {
+  const res = await axios.put(
+    'https://homelesscrm.com/api/person/sensitive/create',
+    { person_id: personId },
+    { headers: addTokenHeader() }
+  );
+
+  return res;
+}
+
 export async function SetPersonSensitiveProfile (userDetails: Record<string, unknown>): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
     'https://homelesscrm.com/api/person/sensitive',
