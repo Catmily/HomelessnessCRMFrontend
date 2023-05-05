@@ -441,14 +441,14 @@ export default function BasicInformationDetails ({
                 </InputGroup>
                 <Form.Label column htmlFor='date_of_birth'>Date of Birth</Form.Label>
                 <InputGroup hasValidation>
-                  <InputGroup.Text id='inputGroupPrepend'>📅</InputGroup.Text>
                   <DatePicker
+                    showIcon
                     type='date'
                     id='date_of_birth'
                     name='dob'
                     onChange={handleChangeDates}
-                    dateFormat='dd/MM/yyyy'
-                    placeholderText={userData['dob'] || ''}
+                    dateFormat='yyyy/MM/dd'
+                    placeholderText={userData['dob'].isoToDate() || ''}
                   />
                 </InputGroup>
               </Col>
