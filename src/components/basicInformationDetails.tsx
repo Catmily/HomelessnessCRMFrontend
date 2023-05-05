@@ -27,6 +27,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { FiveZeroZero } from '../pages/500';
 import { isJWTSupervisor } from '../glue/Auth';
+import DatePicker from 'react-datepicker';
 interface Props {
   user: string
   editMode: boolean
@@ -440,12 +441,14 @@ export default function BasicInformationDetails ({
                 <Form.Label column htmlFor='date_of_birth'>Date of Birth</Form.Label>
                 <InputGroup hasValidation>
                   <InputGroup.Text id='inputGroupPrepend'>📅</InputGroup.Text>
-                  <Form.Control
+                  <DatePicker
                     type='date'
                     id='date_of_birth'
                     name='dob'
                     onChange={handleChangeDates}
-                    placeholder='Date of Birth'
+                    dateFormat='dd/MM/yyyy'
+                    locale='en-GB'
+                    placeholderText='Select date'
                     defaultValue={userData['dob'] || ''}
                   />
                 </InputGroup>
