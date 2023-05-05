@@ -23,8 +23,13 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 	background-color: #28865a;
 }
 
+.navbar-nav .nav-link.active {
+	color: #2f2f2f !important;
+}
+
+
 .nav-link.active {
-	color: #8a8a8a !important;
+	color: #f7f7f7 !important;
 }
 
 #selector {
