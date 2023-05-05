@@ -29,6 +29,8 @@ export default function Case () {
   const [selectedDropdown, setSelectedDropdown] = useState('');
   const [caseDetails, setCaseDetails] = useState();
   const [person, setPerson] = useState('');
+  const [caseWorkerId, setCaseWorkerId] = useState('');
+
   const [reallySure, showReallySure] = useState<boolean>(false);
   const navigate = useNavigate();
   const [errorWhy, setErrorWhy] = useState('');
@@ -41,7 +43,6 @@ export default function Case () {
     const func = async (): Promise<void> => {
       if (caseDetails && selectedDropdown !== '') {
         // Track changes of the caseworker assignment dropdown
-        console.log(caseDetails);
         try {
           await AddCaseWorkerToCase(selectedDropdown, caseDetails['case_id'])
           window.location.reload();
@@ -58,6 +59,7 @@ export default function Case () {
       try {
         const cwsRes = await GetCaseCaseWorkers(id);
         console.log(cwsRes)
+        setCaseWorkerId(cwsRes['data']['person_id'])
       } catch {
       }
       try {
@@ -112,12 +114,11 @@ export default function Case () {
                     <Nav.Item>
                       {caseDetails
                       // Data may have not loaded yet
-                      // @ts-expect-error Type is fine
-                        ? (caseDetails['case_workers'].length !== 0)
+                        ? (caseWorkerId !== '')
                             ? <>
                               <Nav.Link
                                 eventKey='#'
-                                href={`/profile/${caseDetails['case_workers'][0]}`}
+                                href={`/profile/${caseWorkerId}`}
                         >
                                 Case Worker
                               </Nav.Link></>
