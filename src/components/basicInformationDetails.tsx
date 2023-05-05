@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiveZeroZero } from '../pages/500';
 import { isJWTSupervisor } from '../glue/Auth';
 import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 interface Props {
   user: string
   editMode: boolean
