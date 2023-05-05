@@ -40,6 +40,7 @@ export default function Case () {
     const func = async (): Promise<void> => {
       if (caseDetails && selectedDropdown !== '') {
         // Track changes of the caseworker assignment dropdown
+        console.log(caseDetails);
         try {
           await AddCaseWorkerToCase(selectedDropdown, caseDetails['case_id'])
           window.location.reload();
@@ -209,6 +210,7 @@ export default function Case () {
                                   try {
                                     if (caseDetails) {
                                       await RemoveCaseWorkerFromCase(caseDetails['case_id']);
+                                      // console.log(caseDetails)
                                       window.location.reload()
                                     }
                                   } catch {
