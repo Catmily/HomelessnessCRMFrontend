@@ -448,7 +448,7 @@ export default function BasicInformationDetails ({
                     name='dob'
                     onChange={handleChangeDates}
                     dateFormat='yyyy/MM/dd'
-                    placeholderText={userData['dob'] != null ? userData['dob'].isoToDate() : ''}
+                    placeholderText={userData['dob'] != null ? isoToDate(userData['dob']) : ''}
                   />
                 </InputGroup>
               </Col>
