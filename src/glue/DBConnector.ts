@@ -169,10 +169,10 @@ export async function SetUserProfileAdd (userDetails: Record<string, unknown>): 
 
   return res;
 }
-export async function GetCases (caseWorkerId?: string): Promise<AxiosResponse<any, any>> {
+export async function GetCases (staffPersonId?: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
     'https://homelesscrm.com/api/cases/get',
-    { case_worker_id: caseWorkerId },
+    { person_id: staffPersonId },
     { headers: addTokenHeader() }
   );
 
