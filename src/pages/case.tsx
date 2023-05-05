@@ -21,7 +21,7 @@ import StandardLayout from '../layouts/standardLayout';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import SearchPerson from '../components/searchFunction';
-import { isJWTCaseWorker, isJWTSupervisor } from '../glue/Auth';
+import { isJWTSupervisor } from '../glue/Auth';
 import { FiveZeroZero } from './500';
 
 export default function Case () {
@@ -58,7 +58,6 @@ export default function Case () {
     const func = async (): Promise<void> => {
       try {
         const cwsRes = await GetCaseCaseWorkers(id);
-        console.log(cwsRes)
         setCaseWorkerId(cwsRes['data']['person_id'])
       } catch {
       }
@@ -217,7 +216,6 @@ export default function Case () {
                                   try {
                                     if (caseDetails) {
                                       await RemoveCaseWorkerFromCase(caseDetails['case_id']);
-                                      // console.log(caseDetails)
                                       window.location.reload()
                                     }
                                   } catch {

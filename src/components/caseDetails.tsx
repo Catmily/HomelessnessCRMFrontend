@@ -492,7 +492,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
               {entries[i][1].title}
               <p>Date: {new Date(entries[i][1].note_date).toLocaleString()} </p>
               <p>Priority:{' '}
-                <span className={entries[i][1].priority < 3 ? 'red bold' : ''}>
+                <span className={entries[i][1].priority < 3 ? 'backgroundred red bold' : ''}>
                   {priorityType[(entries[i][1].priority) as keyof typeof priorityType]}</span>
               </p>
             </Nav.Link>
@@ -523,7 +523,7 @@ export function NoteList ({ caseDetails, safeguarding }: NoteProps) {
                 <h3>
                   {' '}
                   <span className={'bold'}>Priority:{ ' ' }</span>
-                  <span className={entries[i][1].priority < 3 ? 'red bold' : ''}>
+                  <span className={entries[i][1].priority < 3 ? 'backgroundred red bold' : ''}>
                     {priorityType[(entries[i][1].priority) as keyof typeof priorityType]}</span>
                 </h3>
 
