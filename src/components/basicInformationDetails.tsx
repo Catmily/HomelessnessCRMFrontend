@@ -106,12 +106,11 @@ export default function BasicInformationDetails ({
     }));
   };
 
-  const handleChangeDates = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    const d = new Date(value).toISOString();
+  const handleChangeDates = (date: any) => {
+    const d = new Date(date).toISOString();
     setUserData((prevState: any) => ({
       ...prevState,
-      [name]: d
+      dob: d
     }));
   };
 
@@ -447,7 +446,7 @@ export default function BasicInformationDetails ({
                     type='date'
                     id='date_of_birth'
                     name='dob'
-                    onChange={handleChangeDates}
+                    onChange={(date) => handleChangeDates(date)}
                     dateFormat='yyyy/MM/dd'
                     placeholderText={userData['dob'] != null ? isoToDate(userData['dob']) : ''}
                   />
