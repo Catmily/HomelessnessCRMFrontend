@@ -204,7 +204,7 @@ export default function Case () {
                       <Card className={'card-dark shadow'}>
                         <Container className={'shadow p-3'}>
                           {
-                          (caseDetails !== undefined && isJWTCaseWorker())
+                          (caseDetails !== undefined && isJWTSupervisor())
                           // Typescript is throwing here a weird error, because we checked if caseDetails
                           // exists in that statement.
                           // @ts-expect-error Already checked
