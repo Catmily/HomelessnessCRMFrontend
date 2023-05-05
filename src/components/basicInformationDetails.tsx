@@ -328,9 +328,9 @@ export default function BasicInformationDetails ({
                 <InputGroup hasValidation>
                   <InputGroup.Text id='inputGroupPrepend'>1</InputGroup.Text>
                   <Form.Control
-                    id='address_line_1'
+                    id='address_1'
                     type='text'
-                    name='address_line_1'
+                    name='address_1'
                     aria-label='Address Line 1'
                     placeholder='Address Line 1'
                     onChange={handleChangeBasic}
@@ -340,9 +340,9 @@ export default function BasicInformationDetails ({
                 <InputGroup hasValidation>
                   <InputGroup.Text id='inputGroupPrepend'>2</InputGroup.Text>
                   <Form.Control
-                    id='address_line_2'
+                    id='address_2'
                     type='text'
-                    name='address_line_2'
+                    name='address_2'
                     aria-label='Address Line 2'
 
                     placeholder='Address Line 2'
@@ -354,7 +354,7 @@ export default function BasicInformationDetails ({
                   <InputGroup.Text id='inputGroupPrepend'>3</InputGroup.Text>
                   <Form.Control
                     type='text'
-                    name='address_line_3'
+                    name='address_3'
                     aria-label='Address Line 3'
 
                     placeholder='Address Line 3'
@@ -446,7 +446,7 @@ export default function BasicInformationDetails ({
                     name='dob'
                     onChange={handleChangeDates}
                     placeholder='Date of Birth'
-                    defaultValue='2023-04-14'
+                    defaultValue={userData['dob'] || ''}
                   />
                 </InputGroup>
               </Col>
@@ -460,6 +460,7 @@ export default function BasicInformationDetails ({
                   name='gender'
                   placeholder='Gender'
                   onChange={handleChangeBasic}
+                  defaultValue={userData['gender'] || ''}
                   isInvalid={(userData['gender'] != null) ? !(userData['gender'].length < 15) : false}
 
                   />
