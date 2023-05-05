@@ -115,6 +115,15 @@ export async function AddCaseWorkerToCase (personId: string, caseId: string): Pr
   return res;
 }
 
+export async function GetCaseCaseWorkers (caseId: string): Promise<AxiosResponse<any, any>> {
+  const res = await axios.put(
+    'https://homelesscrm.com/api/case/cw',
+    { case_id: caseId },
+    { headers: addTokenHeader() }
+  );
+  return res;
+}
+
 export async function RemoveCaseWorkerFromCase (caseId: string): Promise<AxiosResponse<any, any>> {
   const res = await axios.put(
     'https://homelesscrm.com/api/case/remove-caseworker',

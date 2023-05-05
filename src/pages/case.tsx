@@ -10,6 +10,7 @@ import {
 import { NoteList, CaseDetails, DocumentList } from '../components/caseDetails';
 import {
   AddCaseWorkerToCase,
+  GetCaseCaseWorkers,
   GetFullCase,
   RemoveCase,
   RemoveCaseWorkerFromCase,
@@ -55,6 +56,8 @@ export default function Case () {
   useEffect(() => {
     const func = async (): Promise<void> => {
       try {
+        const cwsRes = await GetCaseCaseWorkers(id);
+        console.log(cwsRes)
         const res = await GetFullCase(id);
         setCaseDetails(res['data']['message'][0][0]);
         setPerson(res['data']['message'][0][1]);
