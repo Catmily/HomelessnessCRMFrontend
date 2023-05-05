@@ -448,9 +448,7 @@ export default function BasicInformationDetails ({
                     name='dob'
                     onChange={handleChangeDates}
                     dateFormat='dd/MM/yyyy'
-                    locale='en-GB'
-                    placeholderText='Select date'
-                    defaultValue={userData['dob'] || ''}
+                    placeholderText={userData['dob'] || ''}
                   />
                 </InputGroup>
               </Col>
