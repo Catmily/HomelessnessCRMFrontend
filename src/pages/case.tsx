@@ -58,6 +58,9 @@ export default function Case () {
       try {
         const cwsRes = await GetCaseCaseWorkers(id);
         console.log(cwsRes)
+      } catch {
+      }
+      try {
         const res = await GetFullCase(id);
         setCaseDetails(res['data']['message'][0][0]);
         setPerson(res['data']['message'][0][1]);
